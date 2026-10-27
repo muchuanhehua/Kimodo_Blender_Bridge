@@ -1,0 +1,49 @@
+{
+  "version": "1.6.2",
+  "archive": "kimodo_blender_bridge-1.6.2.zip",
+  "bytes": 121786,
+  "sha256": "441140dd6afa2aa3104c57c9dcb5c1db369f62325eab16c2ac9ec7ae52853e53",
+  "payload": {
+    "CHANGELOG.md": "94d79d29ef897b132d1fabf9fba2ed0aac1b1e4193faeb96e7436d128a1ca065",
+    "LICENSE": "edaef632cbb643e4e7a221717a6c441a4c1a7c918e6e4d56debc3d8739b233f6",
+    "NOTICE": "407d41474451b5b99240fef11078515fa59e97a7b8f61736d7da9cda35f1a575",
+    "README.md": "60a10b6ae46f213859cb7ab4bbc9a3e8963433fcc99e593ff54d8334130c0792",
+    "UPSTREAM.md": "d085d70f8fcbe81fb7f05883c1c682d2108ac15ce7a709a3429949f80adb83c6",
+    "__init__.py": "f7c2053beffc820f86a4c1d4428da0c8a8df96292c288ebf25eda07cffd929eb",
+    "blender_manifest.toml": "631d990bebddc55471c79d335c833e8d703e9925ea5b7404154406e13c5719a5",
+    "bridge_server.py": "b8036d40d7afc72219275912b997f21122d49cafa4f551e7e4828a0b744f903a",
+    "constraints.py": "651b9352518df055228741c9953530085b5204bc424e77776420d0a6c410d8fd",
+    "foot_contact.py": "57bcecc3797877072c9c6ee41f4f52bb100723806c0f0166b1473615a12b49d4",
+    "humanoid.py": "47fbfbf7209956a6999f7ac2052d6bf511f77fd19b86d64e55bcb90dcd2c1816",
+    "i18n.py": "28f9237252f0c63e001e90d34bc46887c049e2088e1d01df55848845d1479d66",
+    "model_download.py": "feec6d5bac713a31798660e9eed9a66486be91053fd55f1efe1eba9085d8ad34",
+    "motion_retarget.py": "b2811ff5cae687a2dcb58ef8f8f09d1830b32b891bd75156afbe79118c95266d",
+    "operators.py": "885dc635e3d19f197bd59d394f5f91a1c2cc8d43ccb9ab7ffde9b3b8671d4351",
+    "panels.py": "f5b3822b56a6c3f8aedff570fc34b335bed26d9575078ffa3449c8c760bc264a",
+    "pmx_adapter.py": "88d78f8fc927d8a07f2f41d5d656165f070e236596cff2cd308a667658d2659e",
+    "properties.py": "21bc1d684bfcb18c48d2d84ddf83fdd4270eb85130b5c32e50caac1d7dd44af2",
+    "retarget.py": "9bd0e894e8d064d8039f5207345c237de84926a8a8e15a0d010e276ec6881444",
+    "setup_operator.py": "07ddc9bff4cd171687e1950622a17862549459b02db4c7986dc315876b1d0e19",
+    "subprocess_client.py": "843f7de5b64afe6230a808af1cd02066835081de5604778c855d30d2b4769d93",
+    "timeline.py": "445d100144400c2436d57bfaaef0eebcf7157a730260176b5d0e2c1974f718e1",
+    "ui_list.py": "26476eadf9254d08a01af91c5a1622dfb7249680a172e1272571936f327e7888",
+    "workflow.py": "416f0788b45e86c96e0fd84f35cbf2e6cad62c3a350559e4257db17ef845e304"
+  },
+  "verified_core": {
+    "humanoid.py": "47fbfbf7209956a6999f7ac2052d6bf511f77fd19b86d64e55bcb90dcd2c1816",
+    "motion_retarget.py": "b2811ff5cae687a2dcb58ef8f8f09d1830b32b891bd75156afbe79118c95266d",
+    "pmx_adapter.py": "88d78f8fc927d8a07f2f41d5d656165f070e236596cff2cd308a667658d2659e",
+    "foot_contact.py": "57bcecc3797877072c9c6ee41f4f52bb100723806c0f0166b1473615a12b49d4"
+  },
+  "verification_evidence": "three-models-kimodo-walk-grounded.json",
+  "checks": [
+    "python_syntax",
+    "versions",
+    "native_extension_build",
+    "native_extension_validate",
+    "exact_payload",
+    "zip_crc",
+    "source_archive_bytes",
+    "three_real_pmx_models"
+  ]
+}

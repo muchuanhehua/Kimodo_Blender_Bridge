@@ -1,7 +1,7 @@
 schema_version = "1.0.0"
 
 id = "kimodo_blender_bridge"
-version = "1.6.1"
+version = "1.6.2"
 name = "Kimodo 动作桥接"
 tagline = "中文动作生成、PMX 骨骼准备与通用人形动作重定向"
 maintainer = "muchuanhehua (based on Lewdineer)"

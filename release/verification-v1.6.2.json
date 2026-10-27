@@ -1,0 +1,411 @@
+{
+  "version": "1.6.2",
+  "blender": "5.2.3 LTS",
+  "source_kind": "kimodo_bvh",
+  "source_motion_preserved": true,
+  "core_sha256": {
+    "humanoid.py": "47fbfbf7209956a6999f7ac2052d6bf511f77fd19b86d64e55bcb90dcd2c1816",
+    "motion_retarget.py": "b2811ff5cae687a2dcb58ef8f8f09d1830b32b891bd75156afbe79118c95266d",
+    "pmx_adapter.py": "88d78f8fc927d8a07f2f41d5d656165f070e236596cff2cd308a667658d2659e",
+    "foot_contact.py": "57bcecc3797877072c9c6ee41f4f52bb100723806c0f0166b1473615a12b49d4"
+  },
+  "cases": [
+    {
+      "fixture": "PMX-1",
+      "frames": 73,
+      "before_pelvis_vertical_travel_m": 0.5730364918708801,
+      "after_pelvis_vertical_travel_m": -0.019301950931549072,
+      "before_max_stance_ankle_drift_m": {
+        "l": 0.01704583114840746,
+        "r": 0.01513835117622038
+      },
+      "after_max_stance_ankle_drift_m": {
+        "l": 3.7645417868228263e-06,
+        "r": 3.6290446564439915e-06
+      },
+      "contact": {
+        "ground_height": 0.0,
+        "rest_ground_offset": -0.004637300968170166,
+        "max_ankle_solve_error": 2.5205904384702662e-06,
+        "max_contact_height_error": 0.0007500420324504375,
+        "max_penetration": 0.0004945755936205387,
+        "max_stance_ankle_drift": {
+          "l": 2.2293333639279525e-06,
+          "r": 1.9371509552001953e-06
+        },
+        "max_pelvis_reach_adjustment": 0.03048698052870813,
+        "contact_spans": {
+          "l": [
+            [
+              1,
+              6
+            ],
+            [
+              23,
+              33
+            ],
+            [
+              51,
+              60
+            ]
+          ],
+          "r": [
+            [
+              9,
+              20
+            ],
+            [
+              37,
+              47
+            ],
+            [
+              64,
+              73
+            ]
+          ]
+        },
+        "world_foot_lock": true
+      },
+      "preserved_constraints": 52,
+      "cancel_restores_action": true,
+      "original_action_preserved": true,
+      "hierarchy_preserved": true
+    },
+    {
+      "fixture": "PMX-2",
+      "frames": 73,
+      "before_pelvis_vertical_travel_m": 0.6750993728637695,
+      "after_pelvis_vertical_travel_m": -0.02189159393310547,
+      "before_max_stance_ankle_drift_m": {
+        "l": 0.0193689038284781,
+        "r": 0.01717965494075991
+      },
+      "after_max_stance_ankle_drift_m": {
+        "l": 7.843391489789953e-06,
+        "r": 1.3571546999650894e-05
+      },
+      "contact": {
+        "ground_height": 0.0,
+        "rest_ground_offset": -0.007702194154262543,
+        "max_ankle_solve_error": 7.841183016850274e-06,
+        "max_contact_height_error": 0.0007516280747950077,
+        "max_penetration": 0.0007516280747950077,
+        "max_stance_ankle_drift": {
+          "l": 4.172325134277344e-06,
+          "r": 5.120451830605156e-06
+        },
+        "max_pelvis_reach_adjustment": 0.03559782451719995,
+        "contact_spans": {
+          "l": [
+            [
+              1,
+              6
+            ],
+            [
+              23,
+              33
+            ],
+            [
+              51,
+              60
+            ]
+          ],
+          "r": [
+            [
+              9,
+              20
+            ],
+            [
+              37,
+              47
+            ],
+            [
+              64,
+              73
+            ]
+          ]
+        },
+        "world_foot_lock": true
+      },
+      "preserved_constraints": 74,
+      "cancel_restores_action": true,
+      "original_action_preserved": true,
+      "hierarchy_preserved": true
+    },
+    {
+      "fixture": "PMX-3",
+      "frames": 73,
+      "before_pelvis_vertical_travel_m": 0.5242979526519775,
+      "after_pelvis_vertical_travel_m": -0.02179133892059326,
+      "before_max_stance_ankle_drift_m": {
+        "l": 0.01934871414707451,
+        "r": 0.01709412091572298
+      },
+      "after_max_stance_ankle_drift_m": {
+        "l": 2.72100262892564e-06,
+        "r": 2.457562461863554e-06
+      },
+      "contact": {
+        "ground_height": 0.0,
+        "rest_ground_offset": 0.05724292993545532,
+        "max_ankle_solve_error": 1.9565967989119437e-06,
+        "max_contact_height_error": 0.000854194164276123,
+        "max_penetration": 0.0007775425910949707,
+        "max_stance_ankle_drift": {
+          "l": 2.3871641629339203e-06,
+          "r": 1.6858739404357613e-06
+        },
+        "max_pelvis_reach_adjustment": 0.03658974765354572,
+        "contact_spans": {
+          "l": [
+            [
+              1,
+              6
+            ],
+            [
+              23,
+              33
+            ],
+            [
+              51,
+              60
+            ]
+          ],
+          "r": [
+            [
+              9,
+              20
+            ],
+            [
+              37,
+              47
+            ],
+            [
+              64,
+              73
+            ]
+          ]
+        },
+        "world_foot_lock": true
+      },
+      "preserved_constraints": 66,
+      "cancel_restores_action": true,
+      "original_action_preserved": true,
+      "hierarchy_preserved": true
+    }
+  ],
+  "support_geometry_fixtures": [
+    {
+      "fixture": "barefoot",
+      "foot_depths": [
+        0.06,
+        0.06
+      ],
+      "body_scale": 0.8,
+      "ground_height": 0.0,
+      "actual_mesh_min_z": -0.0007802831241860986,
+      "contact": {
+        "ground_height": 0.0,
+        "rest_ground_offset": -0.0016550738364458084,
+        "max_ankle_solve_error": 1.25163101547434e-06,
+        "max_contact_height_error": 0.0007816042634658515,
+        "max_penetration": 0.0007816042634658515,
+        "max_stance_ankle_drift": {
+          "l": 3.2427148844727334e-07,
+          "r": 4.805480091749757e-07
+        },
+        "max_pelvis_reach_adjustment": 0.007354071132761875,
+        "contact_spans": {
+          "l": [
+            [
+              1,
+              6
+            ],
+            [
+              23,
+              33
+            ],
+            [
+              51,
+              60
+            ]
+          ],
+          "r": [
+            [
+              9,
+              20
+            ],
+            [
+              37,
+              47
+            ],
+            [
+              64,
+              73
+            ]
+          ]
+        },
+        "world_foot_lock": true
+      }
+    },
+    {
+      "fixture": "flat_sole",
+      "foot_depths": [
+        0.09,
+        0.09
+      ],
+      "body_scale": 1.0,
+      "ground_height": 0.0,
+      "actual_mesh_min_z": -0.0005791783332824707,
+      "contact": {
+        "ground_height": 0.0,
+        "rest_ground_offset": 0.02793116122484207,
+        "max_ankle_solve_error": 1.3914844429408016e-06,
+        "max_contact_height_error": 0.0008294098079204559,
+        "max_penetration": 0.0005799178034067154,
+        "max_stance_ankle_drift": {
+          "l": 3.371747880871523e-07,
+          "r": 5.331201499700045e-07
+        },
+        "max_pelvis_reach_adjustment": 0.009076486100860648,
+        "contact_spans": {
+          "l": [
+            [
+              1,
+              6
+            ],
+            [
+              23,
+              33
+            ],
+            [
+              51,
+              60
+            ]
+          ],
+          "r": [
+            [
+              9,
+              20
+            ],
+            [
+              37,
+              47
+            ],
+            [
+              64,
+              73
+            ]
+          ]
+        },
+        "world_foot_lock": true
+      }
+    },
+    {
+      "fixture": "thick_sole",
+      "foot_depths": [
+        0.2,
+        0.2
+      ],
+      "body_scale": 1.25,
+      "ground_height": 0.0,
+      "actual_mesh_min_z": -0.0007656589150428772,
+      "contact": {
+        "ground_height": 0.0,
+        "rest_ground_offset": 0.17241397127509117,
+        "max_ankle_solve_error": 1.8982465194814418e-06,
+        "max_contact_height_error": 0.0010096468031406403,
+        "max_penetration": 0.0007340684533119202,
+        "max_stance_ankle_drift": {
+          "l": 8.596304119739507e-07,
+          "r": 6.743495761743046e-07
+        },
+        "max_pelvis_reach_adjustment": 0.018114577806638055,
+        "contact_spans": {
+          "l": [
+            [
+              1,
+              6
+            ],
+            [
+              23,
+              33
+            ],
+            [
+              51,
+              60
+            ]
+          ],
+          "r": [
+            [
+              9,
+              20
+            ],
+            [
+              37,
+              47
+            ],
+            [
+              64,
+              73
+            ]
+          ]
+        },
+        "world_foot_lock": true
+      }
+    },
+    {
+      "fixture": "mixed_soles",
+      "foot_depths": [
+        0.06,
+        0.18
+      ],
+      "body_scale": 1.0,
+      "ground_height": 0.1,
+      "actual_mesh_min_z": 0.09931865334510803,
+      "contact": {
+        "ground_height": 0.1,
+        "rest_ground_offset": 0.15793117359280587,
+        "max_ankle_solve_error": 3.0648613291221717e-06,
+        "max_contact_height_error": 0.0008172184228897039,
+        "max_penetration": 0.0006754904985427912,
+        "max_stance_ankle_drift": {
+          "l": 1.1920928955078125e-06,
+          "r": 1.1920928955078125e-06
+        },
+        "max_pelvis_reach_adjustment": 0.06724711625372726,
+        "contact_spans": {
+          "l": [
+            [
+              1,
+              6
+            ],
+            [
+              23,
+              33
+            ],
+            [
+              51,
+              60
+            ]
+          ],
+          "r": [
+            [
+              9,
+              20
+            ],
+            [
+              37,
+              47
+            ],
+            [
+              64,
+              73
+            ]
+          ]
+        },
+        "world_foot_lock": true
+      }
+    }
+  ]
+}

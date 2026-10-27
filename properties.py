@@ -277,6 +277,9 @@ class KIMODO_SceneSettings(PropertyGroup):
         ("TRAVEL", "保留位移", "按腿长换算角色的整体位移"),
         ("IN_PLACE", "原地动作", "保留身体起伏，去除平面位移")], default="TRAVEL")
     retarget_action_name: StringProperty(name="新动作名称", default="Kimodo_动作")
+    retarget_foot_contact: BoolProperty(name="足部贴地与防滑", default=True,
+        description="按鞋底校准平地高度，并在保留位移时锁定支撑脚；需要完整腿部映射和角色网格")
+    retarget_ground_height: FloatProperty(name="地面高度", default=0.0, subtype="DISTANCE", unit="LENGTH")
 
     # --- Connection (subprocess bridge) ---
     show_advanced_connection: BoolProperty(

@@ -20,11 +20,14 @@ def rest_world(armature, name):
 
 def human_basis(armature, roles):
     point = lambda role: rest_world(armature, roles[role]).translation
-    right = (point("upper_arm_r") - point("upper_arm_l")).normalized()
-    up = point("head") - point("pelvis")
-    up = (up - right * up.dot(right)).normalized()
+    # Anatomical rest-pose lean must never tilt the locomotion ground plane.
+    # MMD lower-body pivots and SOMA pelvis joints differ by several degrees.
+    up = Vector((0, 0, 1))
+    right = point("upper_arm_r") - point("upper_arm_l")
+    right.z = 0
+    right.normalize()
     forward = up.cross(right).normalized()
-    if min(right.length, up.length, forward.length) < 0.9:
+    if min(right.length, forward.length) < 0.9 or point("head").z <= point("pelvis").z:
         raise ValueError("无法从角色的肩部、骨盆与头部建立人形方向，请检查参考姿态")
     return Matrix((right, forward, up)).transposed()
 
@@ -109,7 +112,7 @@ def commit(target, name=""):
     return action
 
 
-def preview(source, target, start, end, pairs=None, root_mode="TRAVEL"):
+def preview(source, target, start, end, pairs=None, root_mode="TRAVEL", foot_contact=True, ground_height=0.0):
     if source is None or target is None or source == target:
         raise ValueError("请分别指定动作源骨架与目标角色骨架")
     if source.type != "ARMATURE" or target.type != "ARMATURE":
@@ -210,11 +213,17 @@ def preview(source, target, start, end, pairs=None, root_mode="TRAVEL"):
             for name in state["ik"]:
                 target.pose.bones[name].mmd_ik_toggle = False
                 target.pose.bones[name].keyframe_insert("mmd_ik_toggle", frame=frame, group="腿部 FK 控制")
+        contact_state = None
+        if foot_contact:
+            from . import foot_contact as contact_solver
+            contact_state = contact_solver.correct(target, src_roles, dst_roles, shared, samples, source_rest,
+                target_rest, alignment, scale, carrier, start, root_mode, ground_height)
         for curve in action_curves(action):
             for key in curve.keyframe_points:
                 key.interpolation = "LINEAR"
         state.update(preview_action=action.name, scale=scale, frames=end-start+1,
-                     rotation_error_radians=max_rotation_error, committed=False)
+                     rotation_error_radians=max_rotation_error, rotation_error_scope="FK-before-contact",
+                     foot_contact=contact_state, committed=False)
         target[STATE_KEY] = json.dumps(state, ensure_ascii=False)
         scene.frame_set(start)
         return state

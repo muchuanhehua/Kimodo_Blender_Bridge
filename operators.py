@@ -671,7 +671,8 @@ class KIMODO_OT_ApplyRetargeting(Operator):
             return {'CANCELLED'}
         try:
             result = motion_retarget.preview(s.source_armature, s.target_armature,
-                s.bake_start_frame, s.bake_end_frame, pairs, s.retarget_root_mode)
+                s.bake_start_frame, s.bake_end_frame, pairs, s.retarget_root_mode,
+                s.retarget_foot_contact, s.retarget_ground_height)
         except (ValueError, RuntimeError) as exc:
             report(self, {'ERROR'}, str(exc))
             return {'CANCELLED'}

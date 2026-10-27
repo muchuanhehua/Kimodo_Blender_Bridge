@@ -16,6 +16,8 @@ def sha256(data):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--blender", type=Path, required=True)
+    parser.add_argument("--evidence", type=Path, required=True,
+                        help="Actual three-character verification JSON matching the current retarget core")
     args = parser.parse_args()
     root = Path(__file__).resolve().parents[1]
     manifest = tomllib.loads((root / "blender_manifest.toml").read_text(encoding="utf-8"))
@@ -27,8 +29,9 @@ def main():
     for name in python_files:
         ast.parse((root / name).read_text(encoding="utf-8"), filename=name)
     # Verify that the final retarget core matches the actual three-model test.
-    evidence = json.loads((root / ".verification/three-models-kimodo-wave.json").read_text(encoding="utf-8"))
+    evidence = json.loads(args.evidence.read_text(encoding="utf-8"))
     assert len(evidence["models"]) == 3 and evidence["source_kind"] == "kimodo_bvh"
+    assert evidence.get("source_motion_preserved"), "Source preservation was not verified"
     for name, expected in evidence["core_sha256"].items():
         assert sha256((root / name).read_bytes()) == expected, f"Changed core needs verification: {name}"
     expected_payload = python_files | {"blender_manifest.toml", "README.md", "UPSTREAM.md", "CHANGELOG.md", "NOTICE", "LICENSE"}
@@ -55,6 +58,7 @@ def main():
     (release / "index.json").write_text(json.dumps({"version": "v1", "blocklist": [], "data": [item]}, ensure_ascii=False, indent=2)+"\n", encoding="utf-8", newline="\n")
     record = {"version": manifest["version"], "archive": filename, "bytes": archive.stat().st_size,
               "sha256": digest, "payload": fingerprints, "verified_core": evidence["core_sha256"],
+              "verification_evidence": args.evidence.name,
               "checks": ["python_syntax", "versions", "native_extension_build", "native_extension_validate",
                          "exact_payload", "zip_crc", "source_archive_bytes", "three_real_pmx_models"]}
     (release / f"build-v{manifest['version']}.json").write_text(json.dumps(record, ensure_ascii=False, indent=2)+"\n", encoding="utf-8", newline="\n")

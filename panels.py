@@ -647,6 +647,9 @@ class KIMODO_PT_Retarget(KIMODO_PanelBase, Panel):
         box.prop(s, "source_armature", text="Source (Kimodo)")
         box.prop(s, "target_armature", text="Target (Your Rig)")
         box.prop(s, "retarget_root_mode")
+        box.prop(s, "retarget_foot_contact")
+        if s.retarget_foot_contact:
+            box.prop(s, "retarget_ground_height")
 
         layout.separator()
 
