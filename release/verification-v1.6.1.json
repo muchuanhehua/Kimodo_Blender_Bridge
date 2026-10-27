@@ -1,0 +1,34 @@
+{
+  "version": "1.6.1",
+  "blender": "5.2.3 LTS",
+  "mmd_tools": "4.5.14",
+  "archive": "kimodo_blender_bridge-1.6.1.zip",
+  "archive_sha256": "510eb8734cad7846f266a6ba6b618369b3cb93ec440f202572d07597cff448da",
+  "retarget_core_validation": {
+    "source_version": "1.6.0",
+    "report": "verification-v1.6.0.json",
+    "real_motion_cases": 6,
+    "pmx_models": 3,
+    "core_sha256_matches": true,
+    "core_sha256": {
+      "humanoid.py": "47fbfbf7209956a6999f7ac2052d6bf511f77fd19b86d64e55bcb90dcd2c1816",
+      "motion_retarget.py": "65ba30862c4b712f2c82dda80954bfdea6586bb7b3cd39a018f0e1efcc13bec8",
+      "pmx_adapter.py": "88d78f8fc927d8a07f2f41d5d656165f070e236596cff2cd308a667658d2659e"
+    }
+  },
+  "installed_release": {
+    "repository": "https://raw.githubusercontent.com/muchuanhehua/Kimodo_Blender_Bridge/main/release/index.json",
+    "payload_files_verified": 23,
+    "fresh_process_preferences_verified": true,
+    "gui_gpu_start": true,
+    "gui_generation_success": true,
+    "gui_bvh_import_success": true,
+    "imported_bones": 78,
+    "imported_frame_range": [
+      1.0,
+      72.19999694824219
+    ],
+    "chinese_completion_display": "完成 ✓",
+    "gui_panel_reviewed": true
+  }
+}

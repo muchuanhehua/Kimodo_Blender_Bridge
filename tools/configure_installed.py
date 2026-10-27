@@ -16,8 +16,20 @@ def main():
     parser.add_argument("--system-python", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--check-only", action="store_true")
+    parser.add_argument("--update", action="store_true", help="Sync and update only the Kimodo repository package")
     args = parser.parse_args(sys.argv[sys.argv.index("--") + 1:])
     module_name = "bl_ext.kimodo.kimodo_blender_bridge"
+    repo_index, repo = next((index, repo) for index, repo in enumerate(bpy.context.preferences.extensions.repos)
+                           if repo.module == "kimodo")
+    expected_url = "https://raw.githubusercontent.com/muchuanhehua/Kimodo_Blender_Bridge/main/release/index.json"
+    if repo.remote_url != expected_url or not repo.enabled:
+        raise RuntimeError("Kimodo remote extension repository is not configured")
+    if args.update:
+        if bpy.ops.extensions.repo_sync(repo_index=repo_index) != {"FINISHED"}:
+            raise RuntimeError("Kimodo repository synchronization did not finish")
+        if bpy.ops.extensions.package_install(repo_index=repo_index, pkg_id="kimodo_blender_bridge",
+                                              enable_on_install=True) != {"FINISHED"}:
+            raise RuntimeError("Kimodo repository update did not finish")
     if module_name not in bpy.context.preferences.addons:
         raise RuntimeError("Released Kimodo extension is not enabled")
     addon = importlib.import_module(module_name)
@@ -51,10 +63,6 @@ def main():
     if not args.check_only:
         settings.use_offload = False
         bpy.ops.wm.save_userpref()
-    repo = next(repo for repo in bpy.context.preferences.extensions.repos if repo.module == "kimodo")
-    expected_url = "https://raw.githubusercontent.com/muchuanhehua/Kimodo_Blender_Bridge/main/release/index.json"
-    if repo.remote_url != expected_url or not repo.enabled:
-        raise RuntimeError("Kimodo remote extension repository is not configured")
     report = {
         "blender": bpy.app.version_string,
         "module": module_name,
