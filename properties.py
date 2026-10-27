@@ -3,6 +3,8 @@ Kimodo Blender Bridge — Properties
 All bpy.props definitions: addon preferences, scene-level settings, bone mapping.
 """
 
+from .i18n import ui, zh, report, localize_class
+
 import bpy
 from bpy.props import (
     StringProperty, FloatProperty, IntProperty, BoolProperty,
@@ -37,9 +39,9 @@ def _on_end_frame_update(self, context):
             duration = next_seg.end_frame - next_seg.start_frame
             next_seg.start_frame = self.end_frame + 1
             next_seg.end_frame = next_seg.start_frame + duration
-            
+
             break
-    
+
     # Update scene frame_end if any segment's end_frame is larger
     if segs:
         max_end_frame = max(seg.end_frame for seg in segs)
@@ -225,6 +227,7 @@ def _on_inherit_rotation_update(self, context):
 
 class KIMODO_BoneMappingItem(PropertyGroup):
     """A single source → target bone pair for retargeting."""
+    role: StringProperty(name="人形关节语义", default="")
     source_bone: StringProperty(
         name="Source Bone",
         description="Bone name in the Kimodo-generated armature",
@@ -259,7 +262,6 @@ class KIMODO_BoneMappingItem(PropertyGroup):
             "on toggle and again when you click Apply Constraints"
         ),
         default=True,
-        update=_on_inherit_rotation_update,
     )
 
 
@@ -269,6 +271,12 @@ class KIMODO_BoneMappingItem(PropertyGroup):
 
 class KIMODO_SceneSettings(PropertyGroup):
     """Stored on bpy.context.scene.kimodo — all per-scene settings."""
+    pmx_import_scale: FloatProperty(name="PMX 导入比例", default=0.08, min=0.0001, max=10.0)
+    preparation_status: StringProperty(name="模型准备状态", default="")
+    retarget_root_mode: EnumProperty(name="角色移动", items=[
+        ("TRAVEL", "保留位移", "按腿长换算角色的整体位移"),
+        ("IN_PLACE", "原地动作", "保留身体起伏，去除平面位移")], default="TRAVEL")
+    retarget_action_name: StringProperty(name="新动作名称", default="Kimodo_动作")
 
     # --- Connection (subprocess bridge) ---
     show_advanced_connection: BoolProperty(
@@ -293,8 +301,6 @@ class KIMODO_SceneSettings(PropertyGroup):
         description="Kimodo model to load into the bridge process",
         items=[
             ("Kimodo-SOMA-RP-v1",  "Kimodo SOMA",   "Standard human SOMA skeleton (recommended)"),
-            ("Kimodo-SMPLX-RP-v1", "Kimodo SMPL-X (Unsupported atm)", "Extended body with hands and face"),
-            ("Kimodo-G1-RP-v1",    "Kimodo G1 (Unsupported atm)",     "Unitree G1 robot skeleton"),
         ],
         default="Kimodo-SOMA-RP-v1",
     )
@@ -560,6 +566,13 @@ class KIMODO_AddonPreferences(AddonPreferences):
         subtype='DIR_PATH',
     )
 
+    def draw(self, context):
+        layout = ui(self.layout)
+        layout.label(text="中文动作生成 · PMX 模型准备 · 通用人形重定向")
+        layout.prop(self, "install_location")
+        layout.prop(self, "system_python_override")
+        layout.operator("wm.url_open", text="查看仓库与更新说明", icon="URL").url = "https://github.com/muchuanhehua/Kimodo_Blender_Bridge"
+
 
 # ---------------------------------------------------------------------------
 # Transient-state cleanup (#43)
@@ -570,6 +583,7 @@ class KIMODO_AddonPreferences(AddonPreferences):
 # gray out the Generate button behind a "Cancelling…" that never finishes.
 
 def _reset_transient_generation_state() -> None:
+    from . import setup_operator, subprocess_client
     for scene in bpy.data.scenes:
         k = getattr(scene, "kimodo", None)
         if k is None:
@@ -580,6 +594,13 @@ def _reset_transient_generation_state() -> None:
             k.generation_progress = ""
         if k.generating_segment_index != -1:
             k.generating_segment_index = -1
+        if not k.python_executable:
+            installed_python = setup_operator.managed_python()
+            if installed_python:
+                k.python_executable = installed_python
+        if not subprocess_client.is_running():
+            k.is_connected = False
+            k.connection_status = "Not started"
 
 
 @bpy.app.handlers.persistent
@@ -614,7 +635,7 @@ _classes = [
 
 def register():
     for cls in _classes:
-        bpy.utils.register_class(cls)
+        bpy.utils.register_class(localize_class(cls))
     bpy.types.Scene.kimodo = PointerProperty(type=KIMODO_SceneSettings)
     if _on_load_post not in bpy.app.handlers.load_post:
         bpy.app.handlers.load_post.append(_on_load_post)

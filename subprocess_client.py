@@ -421,6 +421,11 @@ def _bridge_env(python_exe: str) -> dict:
     were pre-downloaded into the HF cache by the installer).
     """
     env = os.environ.copy()
+    executable_dir = os.path.dirname(os.path.abspath(python_exe))
+    runtime_root = os.path.dirname(executable_dir) if os.path.basename(executable_dir).lower() in ("bin", "scripts") else executable_dir
+    runtime_cache = os.path.join(runtime_root, "hf-cache")
+    if os.path.isdir(runtime_cache):
+        env["HF_HOME"] = runtime_cache
     try:
         from . import setup_operator as _so
         is_kimodo = _so.is_kimodo_venv(python_exe)

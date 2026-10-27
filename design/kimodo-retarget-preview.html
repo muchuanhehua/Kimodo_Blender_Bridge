@@ -1,0 +1,168 @@
+<div id="kimodo-mmd-proposal" class="viz-dotted-background" aria-label="Kimodo 通用动作重定向方案预览">
+  <style>
+    #kimodo-mmd-proposal { padding: 24px 0; display: grid; place-items: start center; }
+    #kimodo-mmd-proposal .km-window { --km-bg: light-dark(#eeeeee, #292929); --km-panel: light-dark(#e3e3e3, #343434); --km-field: light-dark(#fafafa, #222222); --km-fg: light-dark(#242424, #ededed); --km-sub: light-dark(#555555, #b8b8b8); --km-border: light-dark(#b8b8b8, #4d4d4d); --km-active: light-dark(#3c6f9e, #477fae); --km-active-fg: #ffffff; width: min(100%, 410px); min-width: 0; box-sizing: border-box; color: var(--km-fg); background: var(--km-bg); border: 1px solid var(--km-border); border-radius: 7px; font: 400 13px/1.55 "Segoe UI", "Microsoft YaHei", sans-serif; }
+    #kimodo-mmd-proposal .km-window * { box-sizing: border-box; }
+    #kimodo-mmd-proposal .km-top { display: flex; align-items: center; flex-wrap: wrap; gap: 9px; padding: 13px 14px; border-bottom: 1px solid var(--km-border); }
+    #kimodo-mmd-proposal .km-title { font-weight: 500; }
+    #kimodo-mmd-proposal .km-tag { color: var(--km-sub); font-size: 12px; }
+    #kimodo-mmd-proposal .km-tabs { display: flex; flex-wrap: wrap; padding: 10px 12px 0; gap: 4px; }
+    #kimodo-mmd-proposal .km-tabs button { flex: 1 1 0; min-width: 0; }
+    #kimodo-mmd-proposal button { color: var(--km-fg); background: var(--km-panel); border: 1px solid var(--km-border); border-radius: 4px; font: inherit; padding: 6px 9px; }
+    #kimodo-mmd-proposal button[aria-selected="true"], #kimodo-mmd-proposal button[aria-pressed="true"], #kimodo-mmd-proposal .km-primary { background: var(--km-active); color: var(--km-active-fg); border-color: var(--km-active); }
+    #kimodo-mmd-proposal button:disabled { opacity: .55; }
+    #kimodo-mmd-proposal .km-content { padding: 13px 14px; }
+    #kimodo-mmd-proposal .km-field { display: grid; gap: 5px; margin-bottom: 12px; }
+    #kimodo-mmd-proposal input, #kimodo-mmd-proposal select, #kimodo-mmd-proposal textarea { color: var(--km-fg); background: var(--km-field); border: 1px solid var(--km-border); border-radius: 3px; font: inherit; width: 100%; min-width: 0; padding: 6px 8px; }
+    #kimodo-mmd-proposal textarea { resize: vertical; min-height: 76px; }
+    #kimodo-mmd-proposal .km-label { color: var(--km-sub); }
+    #kimodo-mmd-proposal .km-two { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    #kimodo-mmd-proposal .km-presets { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 8px; }
+    #kimodo-mmd-proposal .km-primary { display: block; width: 100%; margin-top: 8px; font-weight: 500; }
+    #kimodo-mmd-proposal .km-strip { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 5px; padding-bottom: 10px; margin-bottom: 12px; border-bottom: 1px solid var(--km-border); }
+    #kimodo-mmd-proposal .km-small { font-size: 12px; color: var(--km-sub); }
+    #kimodo-mmd-proposal .km-note { margin: 6px 0 12px; color: var(--km-sub); }
+    #kimodo-mmd-proposal .km-mapping { width: 100%; border-collapse: collapse; margin: 3px 0 12px; }
+    #kimodo-mmd-proposal .km-mapping th, #kimodo-mmd-proposal .km-mapping td { text-align: left; font-weight: 400; padding: 6px 0; border-bottom: 1px solid var(--km-border); overflow-wrap: anywhere; }
+    #kimodo-mmd-proposal .km-mapping th { color: var(--km-sub); }
+    #kimodo-mmd-proposal .km-mapping td:last-child { padding-left: 12px; }
+    #kimodo-mmd-proposal details { border-top: 1px solid var(--km-border); padding-top: 9px; margin: 10px 0; }
+    #kimodo-mmd-proposal details .km-two { margin-top: 10px; }
+    #kimodo-mmd-proposal .km-footer { padding: 10px 14px; color: var(--km-sub); border-top: 1px solid var(--km-border); font-size: 12px; overflow-wrap: anywhere; }
+    #kimodo-mmd-proposal [hidden] { display: none !important; }
+    @media (max-width: 380px) { #kimodo-mmd-proposal .km-two { grid-template-columns: 1fr; gap: 0; } #kimodo-mmd-proposal .km-content { padding: 12px; } #kimodo-mmd-proposal .km-tabs button { flex-basis: calc(50% - 4px); } }
+    @media (pointer: coarse) { #kimodo-mmd-proposal button, #kimodo-mmd-proposal select { min-height: 44px; } #kimodo-mmd-proposal input, #kimodo-mmd-proposal textarea, #kimodo-mmd-proposal select { font-size: 16px; } }
+  </style>
+  <section class="km-window" aria-label="Kimodo 动作桥接侧栏">
+    <div class="km-top"><span class="km-title">Kimodo 动作桥接</span><span class="km-tag">中文界面 · 通用重定向预览</span></div>
+    <div class="km-tabs" role="tablist" aria-label="动作工作流">
+      <button class="cursor-interaction" id="km-tab-prepare" role="tab" aria-selected="true" aria-controls="km-panel-prepare" data-step="prepare" type="button">模型准备</button>
+      <button class="cursor-interaction" id="km-tab-generate" role="tab" aria-selected="false" aria-controls="km-panel-generate" data-step="generate" type="button">动作生成</button>
+      <button class="cursor-interaction" id="km-tab-adapt" role="tab" aria-selected="false" aria-controls="km-panel-adapt" data-step="adapt" type="button">重定向</button>
+      <button class="cursor-interaction" id="km-tab-bake" role="tab" aria-selected="false" aria-controls="km-panel-bake" data-step="bake" type="button">烘焙保存</button>
+    </div>
+    <div class="km-content">
+      <div class="km-strip"><span>目标角色</span><span class="km-label">示例 PMX 角色</span></div>
+      <section id="km-panel-prepare" role="tabpanel" aria-labelledby="km-tab-prepare">
+        <label class="km-field" for="km-model-format"><span class="km-label">模型格式</span><select id="km-model-format"><option>PMX · MMD Tools 导入</option><option disabled>FBX · 后续适配</option></select></label>
+        <div class="km-field"><span class="km-label">导入后自动修复</span><span>骨名编码、长度、重名与骨骼顺序</span></div>
+        <div class="km-field"><span class="km-label">重定向准备</span><span>识别人形骨骼 · 校准姿态与比例</span></div>
+        <div class="km-field"><span class="km-label">原模型结构</span><span>保留辅助骨、追加变换与原有绑定</span></div>
+        <div class="km-small">模型准备 → 动作生成 → 重定向 → 烘焙</div>
+        <button class="km-primary cursor-interaction" id="km-import-prepare" type="button">导入并自动修复（演示）</button>
+      </section>
+      <section id="km-panel-generate" role="tabpanel" aria-labelledby="km-tab-generate" hidden>
+        <div class="km-field"><span class="km-label">双语动作预设</span><div class="km-presets">
+          <button class="cursor-interaction" data-preset="walk" aria-pressed="true" type="button">自然走路</button>
+          <button class="cursor-interaction" data-preset="wave" aria-pressed="false" type="button">挥手</button>
+          <button class="cursor-interaction" data-preset="squat" aria-pressed="false" type="button">下蹲起身</button>
+        </div></div>
+        <label class="km-field" for="km-prompt"><span class="km-label">提交给模型的动作描述（可编辑）</span><textarea id="km-prompt" spellcheck="false">A person walks forward at a natural pace.</textarea></label>
+        <div class="km-two">
+          <label class="km-field" for="km-duration"><span class="km-label">动作时长（秒）</span><input id="km-duration" type="number" min="1" max="20" value="5" step="1"></label>
+          <label class="km-field" for="km-root-mode"><span class="km-label">角色移动</span><select id="km-root-mode"><option value="travel">保留行走位移</option><option value="inplace">原地动作</option></select></label>
+        </div>
+        <details id="km-engine"><summary class="cursor-interaction">生成设置</summary><div class="km-two">
+          <label class="km-field" for="km-seed"><span class="km-label">随机种子</span><input id="km-seed" type="number" value="42" min="0"></label>
+          <label class="km-field" for="km-steps"><span class="km-label">去噪步数</span><input id="km-steps" type="number" value="100" min="1"></label>
+        </div></details>
+        <button class="km-primary cursor-interaction" id="km-generate" type="button">生成并进入重定向（演示）</button>
+      </section>
+      <section id="km-panel-adapt" role="tabpanel" aria-labelledby="km-tab-adapt" hidden>
+        <div class="km-field"><span class="km-label">骨架配置</span><span>PMX 人形 · 日文 / 英文骨名与模型层级</span></div>
+        <table class="km-mapping" aria-label="统一人形定义到 PMX 目标的映射示例"><thead><tr><th>人形关节语义</th><th>PMX 目标示例</th></tr></thead><tbody>
+          <tr><td>身体整体移动</td><td>センター / グルーブ</td></tr>
+          <tr><td>骨盆旋转</td><td>下半身</td></tr>
+          <tr><td>躯干弯曲</td><td>上半身 / 上半身2</td></tr>
+          <tr><td>左上臂</td><td>左腕</td></tr>
+          <tr><td>左小腿</td><td>左ひざ</td></tr>
+        </tbody></table>
+        <label class="km-field" for="km-leg-mode"><span class="km-label">腿部控制方式</span><select id="km-leg-mode"><option>FK 基础重定向 · 首版</option><option disabled>足部 IK 与接触修正 · 后续阶段</option></select></label>
+        <details id="km-calibration"><summary class="cursor-interaction">姿态与比例校准</summary><div class="km-field" style="margin-top:10px"><span class="km-label">校准方式</span><span>以角色静止姿态计算骨轴偏差</span><span class="km-label">位移比例</span><span>根据角色与源骨架的腿长换算</span></div></details>
+        <button class="km-primary cursor-interaction" id="km-preview" type="button">预览到目标角色（演示）</button>
+      </section>
+      <section id="km-panel-bake" role="tabpanel" aria-labelledby="km-tab-bake" hidden>
+        <label class="km-field" for="km-action-name"><span class="km-label">新动作名称</span><input id="km-action-name" value="Kimodo_Walk_01" maxlength="64"></label>
+        <div class="km-field"><span class="km-label">写入方式</span><span>新建 Action · 保留已有动作</span></div>
+        <div class="km-field"><span class="km-label">约束处理</span><span>仅移除本插件创建的临时约束</span></div>
+        <div class="km-field"><span class="km-label">帧率</span><span>按当前场景帧率重采样</span></div>
+        <button class="km-primary cursor-interaction" id="km-bake" type="button">烘焙为新动作（演示）</button>
+        <div class="km-small" style="margin-top:10px">结果为 Blender 动作，可用于预览、编辑和渲染</div>
+      </section>
+    </div>
+    <div class="km-footer" id="km-status" aria-live="polite">界面示意 · 未连接 Blender 或 Kimodo</div>
+  </section>
+  <script>
+    (() => {
+      const root = document.getElementById('kimodo-mmd-proposal');
+      const view = root.querySelector('.km-window');
+      const tabs = [...root.querySelectorAll('[data-step]')];
+      const presetButtons = [...root.querySelectorAll('[data-preset]')];
+      const prompt = root.querySelector('#km-prompt');
+      const duration = root.querySelector('#km-duration');
+      const rootMode = root.querySelector('#km-root-mode');
+      const action = root.querySelector('#km-action-name');
+      const status = root.querySelector('#km-status');
+      const presets = {
+        walk: { text: 'A person walks forward at a natural pace.', action: 'Kimodo_Walk_01' },
+        wave: { text: 'A person stands still and waves their right hand.', action: 'Kimodo_Wave_01' },
+        squat: { text: 'A person squats down and then stands back up.', action: 'Kimodo_Squat_01' }
+      };
+      const state = { step: 'prepare', preset: 'walk', text: presets.walk.text, duration: 5, rootMode: 'travel', action: presets.walk.action };
+      const design = { calibrationOpen: false };
+      function render() {
+        tabs.forEach(button => {
+          const active = button.dataset.step === state.step;
+          button.setAttribute('aria-selected', String(active));
+          root.querySelector('#' + button.getAttribute('aria-controls')).hidden = !active;
+        });
+        presetButtons.forEach(button => button.setAttribute('aria-pressed', String(button.dataset.preset === state.preset)));
+        prompt.value = state.text;
+        duration.value = state.duration;
+        rootMode.value = state.rootMode;
+        action.value = state.action;
+      }
+      function save() {
+        if (window.openai && typeof window.openai.setWidgetState === 'function') {
+          Promise.resolve(window.openai.setWidgetState({ modelContent: { workflow: 'Kimodo general retarget proposal', step: state.step, preset: state.preset, rootMode: state.rootMode, currentFormat: 'PMX', plannedFormat: 'FBX' }, privateContent: { ...state } })).catch(() => {});
+        }
+      }
+      function restore(saved) {
+        const candidate = saved && saved.privateContent;
+        if (!candidate || typeof candidate !== 'object') return;
+        if (['prepare', 'generate', 'adapt', 'bake'].includes(candidate.step)) state.step = candidate.step;
+        if (Object.hasOwn(presets, candidate.preset)) state.preset = candidate.preset;
+        if (typeof candidate.text === 'string') state.text = candidate.text;
+        if (Number.isFinite(Number(candidate.duration))) state.duration = Math.min(20, Math.max(1, Number(candidate.duration)));
+        if (['travel', 'inplace'].includes(candidate.rootMode)) state.rootMode = candidate.rootMode;
+        if (typeof candidate.action === 'string') state.action = candidate.action.slice(0, 64);
+        render();
+      }
+      tabs.forEach(button => button.addEventListener('click', () => { state.step = button.dataset.step; status.textContent = '界面示意 · 未连接 Blender 或 Kimodo'; render(); save(); }));
+      root.querySelector('[role="tablist"]').addEventListener('keydown', event => {
+        if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) return;
+        const current = tabs.indexOf(document.activeElement);
+        if (current < 0) return;
+        event.preventDefault();
+        const next = event.key === 'Home' ? 0 : event.key === 'End' ? tabs.length - 1 : (current + (event.key === 'ArrowRight' ? 1 : -1) + tabs.length) % tabs.length;
+        tabs[next].click(); tabs[next].focus();
+      });
+      presetButtons.forEach(button => button.addEventListener('click', () => { state.preset = button.dataset.preset; state.text = presets[state.preset].text; state.action = presets[state.preset].action; render(); save(); }));
+      prompt.addEventListener('change', () => { state.text = prompt.value; save(); });
+      duration.addEventListener('change', () => { state.duration = Math.min(20, Math.max(1, Number(duration.value) || 5)); render(); save(); });
+      rootMode.addEventListener('change', () => { state.rootMode = rootMode.value; save(); });
+      action.addEventListener('change', () => { state.action = action.value.trim() || presets[state.preset].action; render(); save(); });
+      root.querySelector('#km-import-prepare').addEventListener('click', () => { state.step = 'generate'; render(); status.textContent = '流程演示：PMX 导入 → 自动修复 → 骨架准备'; save(); });
+      root.querySelector('#km-generate').addEventListener('click', () => { state.step = 'adapt'; render(); status.textContent = '流程演示：SOMA 动作 → 统一人形定义 → 目标骨架'; save(); });
+      root.querySelector('#km-preview').addEventListener('click', () => { state.step = 'bake'; render(); status.textContent = '流程演示：姿态校准 → 角色预览 → 新动作'; save(); });
+      root.querySelector('#km-bake').addEventListener('click', () => { state.action = action.value.trim() || presets[state.preset].action; status.textContent = '演示输出：' + state.action + '（未实际生成）'; save(); });
+      render();
+      restore(window.openai && window.openai.widgetState);
+      window.addEventListener('openai:set_globals', event => { restore(event.detail && event.detail.globals && event.detail.globals.widgetState); });
+      if (globalThis.Tweak) {
+        const tweak = new Tweak({ container: view, onChange: () => { root.querySelector('#km-calibration').open = design.calibrationOpen; } });
+        tweak.addToggle(design, 'calibrationOpen', { label: '展开姿态校准' });
+      }
+    })();
+  </script>
+</div>

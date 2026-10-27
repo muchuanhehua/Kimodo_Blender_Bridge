@@ -1,0 +1,30 @@
+{
+  "version": "v1",
+  "blocklist": [],
+  "data": [
+    {
+      "schema_version": "1.0.0",
+      "id": "kimodo_blender_bridge",
+      "version": "1.6.0",
+      "name": "Kimodo 动作桥接",
+      "tagline": "中文动作生成、PMX 骨骼准备与通用人形动作重定向",
+      "maintainer": "muchuanhehua (based on Lewdineer)",
+      "type": "add-on",
+      "website": "https://github.com/muchuanhehua/Kimodo_Blender_Bridge",
+      "blender_version_min": "4.2.0",
+      "license": [
+        "SPDX:GPL-2.0-or-later"
+      ],
+      "tags": [
+        "Animation"
+      ],
+      "permissions": {
+        "files": "导入角色和动作，读写本插件预设与独立运行环境",
+        "network": "安装 Kimodo 依赖、下载模型和检查扩展更新"
+      },
+      "archive_url": "https://github.com/muchuanhehua/Kimodo_Blender_Bridge/releases/download/v1.6.0/kimodo_blender_bridge-1.6.0.zip",
+      "archive_size": 113258,
+      "archive_hash": "sha256:a0ce0cbab7952ddd5a09d6bbef2879d835358a2a062e6b0c22b30264cfa481e5"
+    }
+  ]
+}

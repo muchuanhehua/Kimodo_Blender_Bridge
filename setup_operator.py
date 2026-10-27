@@ -15,6 +15,8 @@ import sys
 import threading
 import traceback
 
+from .i18n import ui, zh, report, localize_class
+
 import bpy
 from bpy.types import Operator
 from bpy.props import StringProperty, BoolProperty, EnumProperty
@@ -367,7 +369,7 @@ def _set_dl_progress(frac: float, label: str = "") -> None:
 
 def _parse_tqdm_pct(line: str) -> "float | None":
     """Extract a 0.0–1.0 fraction from a tqdm progress line, or None."""
-    m = re.search(r"(\d+)%\|", line)
+    m = re.search(r"(\d+(?:\.\d+)?)%", line)
     if m:
         return int(m.group(1)) / 100.0
     return None
@@ -580,78 +582,21 @@ def _run(cmd: list, step: str, env: "dict | None" = None,
         raise RuntimeError(f"{step} failed (exit {proc.returncode})")
 
 
-def _download_with_retry(
-    venv_py: str,
-    step: str,
-    repo_id: str,
-    local_dir: "str | None" = None,
-    hf_token: str = "",
-) -> None:
-    """Run snapshot_download in the venv with timeout, retry, and progress tracking.
-
-    All variable data (token, paths) is passed via env vars rather than
-    interpolated into the script string — this avoids quoting issues with
-    Windows paths and tokens containing special characters.
-    """
-    import time as _time
-
+def _download_with_retry(venv_py, step, repo_id, local_dir=None, hf_token=""):
+    """Download model files with bounded ranges and verify their LFS hashes."""
+    command = [venv_py, os.path.join(os.path.dirname(__file__), "model_download.py"), "--repo", repo_id]
     if local_dir:
-        dl_script = (
-            "import os; from huggingface_hub import snapshot_download; "
-            "tok = os.environ.get('_KBB_HF_TOKEN') or None; "
-            "snapshot_download(repo_id=os.environ['_KBB_REPO_ID'], "
-            "local_dir=os.environ['_KBB_LOCAL_DIR'], token=tok)"
-        )
-    else:
-        dl_script = (
-            "import os; from huggingface_hub import snapshot_download; "
-            "tok = os.environ.get('_KBB_HF_TOKEN') or None; "
-            "snapshot_download(repo_id=os.environ['_KBB_REPO_ID'], token=tok)"
-        )
-
-    extra_env = {
-        "_KBB_REPO_ID":           repo_id,
-        "_KBB_HF_TOKEN":          hf_token,
-        # Per-request HTTP stall timeout — prevents silent hangs on slow/rate-
-        # limited connections.  Individual requests that stall for longer than
-        # this value will be aborted and retried by huggingface_hub internally.
-        "HF_HUB_DOWNLOAD_TIMEOUT": str(_HF_TIMEOUT_SECS),
-        # Force unbuffered stdout so tqdm progress lines reach us in real time
-        # instead of sitting in the subprocess's output buffer.
-        "PYTHONUNBUFFERED":        "1",
-    }
-    if local_dir:
-        extra_env["_KBB_LOCAL_DIR"] = local_dir
-
-    def _on_line(line: str) -> None:
-        pct = _parse_tqdm_pct(line)
-        if pct is not None:
-            _set_dl_progress(pct, step)
-
-    last_exc: "Exception | None" = None
-    for attempt in range(1, _HF_MAX_ATTEMPTS + 1):
-        if attempt > 1:
-            wait = _HF_BACKOFF_BASE * (2 ** (attempt - 2))   # 15 s, 30 s
-            _log(f"  Retry {attempt}/{_HF_MAX_ATTEMPTS} in {wait}s…")
-            _time.sleep(wait)
-        _set_dl_progress(0.0, step)
-        try:
-            _run(
-                [venv_py, "-c", dl_script],
-                f"{step} (attempt {attempt}/{_HF_MAX_ATTEMPTS})",
-                env=extra_env,
-                on_line=_on_line,
-            )
-            _set_dl_progress(1.0, step)
-            return
-        except RuntimeError as exc:
-            last_exc = exc
-            _log(f"  Attempt {attempt} failed: {exc}")
-
-    raise RuntimeError(
-        f"{step} failed after {_HF_MAX_ATTEMPTS} attempts. "
-        f"Last error: {last_exc}"
-    )
+        command += ["--local-dir", local_dir]
+    environment = {"PYTHONUNBUFFERED": "1"}
+    if hf_token:
+        environment["HF_TOKEN"] = hf_token
+    def progress(line):
+        percentage = _parse_tqdm_pct(line)
+        if percentage is not None:
+            _set_dl_progress(percentage, step)
+    _set_dl_progress(0.0, step)
+    _run(command, step, env=environment, on_line=progress)
+    _set_dl_progress(1.0, step)
 
 
 def _venv_pip() -> list:
@@ -1056,7 +1001,7 @@ class KIMODO_OT_ConfirmDeleteDir(Operator):
             return wm.invoke_props_dialog(self, width=460)
 
     def draw(self, context):
-        _draw_delete_confirmation(self.layout, self.directory)
+        _draw_delete_confirmation(ui(self.layout), self.directory)
 
     def execute(self, context):
         # Re-enter the operator that asked, this time carrying the consent.
@@ -1101,7 +1046,7 @@ class KIMODO_OT_InstallKimodo(Operator):
 
     def execute(self, context):
         if is_installing():
-            self.report({"WARNING"}, "Installation is already in progress.")
+            report(self, {"WARNING"}, "Installation is already in progress.")
             return {"CANCELLED"}
 
         # If the user picked a folder in the browser, place the venv in a clearly
@@ -1130,7 +1075,7 @@ class KIMODO_OT_InstallKimodo(Operator):
         real_dir = os.path.realpath(
             os.path.abspath(os.path.expanduser(install_dir)))
         if _is_protected_path(real_dir):
-            self.report(
+            report(self,
                 {"ERROR"},
                 f"Refusing to use '{real_dir}' as the install location. Pick a "
                 f"dedicated folder (a 'kimodo-venv' subfolder is created for "
@@ -1149,7 +1094,7 @@ class KIMODO_OT_InstallKimodo(Operator):
             # directory first. The dialog re-runs us with confirmed=True.
             if not self.confirmed:
                 if not _request_delete_confirmation(install_dir, 'RETRY_INSTALL'):
-                    self.report(
+                    report(self,
                         {"ERROR"},
                         f"Refusing to delete '{install_dir}' without "
                         f"confirmation. Remove it manually to retry.",
@@ -1159,11 +1104,11 @@ class KIMODO_OT_InstallKimodo(Operator):
             try:
                 _safe_rmtree(install_dir)
             except Exception as exc:
-                self.report({"ERROR"}, f"Could not remove partial venv: {exc}")
+                report(self, {"ERROR"}, f"Could not remove partial venv: {exc}")
                 return {"CANCELLED"}
 
         if is_installed():
-            self.report({"INFO"}, "Managed Kimodo venv already exists.")
+            report(self, {"INFO"}, "Managed Kimodo venv already exists.")
             return {"CANCELLED"}
 
         with _lock:
@@ -1196,7 +1141,7 @@ class KIMODO_OT_InstallKimodo(Operator):
             return 0.5 if is_installing() else None
 
         bpy.app.timers.register(_redraw, first_interval=0.5)
-        self.report({"INFO"}, "Kimodo installation started — watch the Connection panel.")
+        report(self, {"INFO"}, "Kimodo installation started — watch the Connection panel.")
         return {"FINISHED"}
 
 
@@ -1208,10 +1153,10 @@ class KIMODO_OT_UseInstalledKimodo(Operator):
     def execute(self, context):
         py = managed_python()
         if not py:
-            self.report({"ERROR"}, f"Managed venv not found at {managed_venv()}")
+            report(self, {"ERROR"}, f"Managed venv not found at {managed_venv()}")
             return {"CANCELLED"}
         context.scene.kimodo.python_executable = py
-        self.report({"INFO"}, f"Python path set to: {py}")
+        report(self, {"INFO"}, f"Python path set to: {py}")
         return {"FINISHED"}
 
 
@@ -1229,17 +1174,17 @@ class KIMODO_OT_ResetVenv(Operator):
 
     def execute(self, context):
         if is_installing():
-            self.report({"WARNING"}, "Cannot reset while installation is in progress.")
+            report(self, {"WARNING"}, "Cannot reset while installation is in progress.")
             return {"CANCELLED"}
         if not venv_exists():
-            self.report({"INFO"}, "No venv found — nothing to reset.")
+            report(self, {"INFO"}, "No venv found — nothing to reset.")
             return {"CANCELLED"}
         install_dir = managed_venv()
         # Always confirm the exact directory before removing it. The dialog
         # re-runs this operator with confirmed=True if the user agrees.
         if not self.confirmed:
             if not _request_delete_confirmation(install_dir, 'RESET'):
-                self.report(
+                report(self,
                     {"ERROR"},
                     f"Refusing to delete '{install_dir}' without confirmation.",
                 )
@@ -1247,11 +1192,11 @@ class KIMODO_OT_ResetVenv(Operator):
         try:
             _safe_rmtree(install_dir)
         except Exception as exc:
-            self.report({"ERROR"}, f"Could not remove venv: {exc}")
+            report(self, {"ERROR"}, f"Could not remove venv: {exc}")
             return {"CANCELLED"}
         with _lock:
             _state.update(running=False, lines=[], error="", done=False)
-        self.report({"INFO"}, f"Removed {install_dir} — ready for a fresh install.")
+        report(self, {"INFO"}, f"Removed {install_dir} — ready for a fresh install.")
         return {"FINISHED"}
 
 
@@ -1290,7 +1235,7 @@ _classes = [
 
 def register():
     for cls in _classes:
-        bpy.utils.register_class(cls)
+        bpy.utils.register_class(localize_class(cls))
 
 
 def unregister():

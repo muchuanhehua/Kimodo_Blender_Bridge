@@ -2,3 +2,7 @@ __pycache__/
 *.pyc
 CLAUDE.md
 Archive.zip
+.runtime/
+.verification/
+*.blend
+*.blend1

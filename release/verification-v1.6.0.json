@@ -1,0 +1,99 @@
+{
+  "version": "1.6.0",
+  "blender": "5.2.3 LTS",
+  "mmd_tools": "4.5.14",
+  "source": "Actual local Kimodo SOMA BVH, standard T pose, seed 42",
+  "cases": [
+    {
+      "fixture": "PMX-1",
+      "motion": "walk",
+      "bones": 332,
+      "fixed_names": 45,
+      "mapped_joints": 22,
+      "frames": 73,
+      "rotation_error_degrees": 1.0017912669061661e-05,
+      "preserved_constraints": 52,
+      "previous_action_preserved": true,
+      "cancel_restores_action": true,
+      "repeat_preparation_stable": true
+    },
+    {
+      "fixture": "PMX-2",
+      "motion": "walk",
+      "bones": 643,
+      "fixed_names": 27,
+      "mapped_joints": 22,
+      "frames": 73,
+      "rotation_error_degrees": 1.0017912669061661e-05,
+      "preserved_constraints": 74,
+      "previous_action_preserved": true,
+      "cancel_restores_action": true,
+      "repeat_preparation_stable": true
+    },
+    {
+      "fixture": "PMX-3",
+      "motion": "walk",
+      "bones": 283,
+      "fixed_names": 11,
+      "mapped_joints": 22,
+      "frames": 73,
+      "rotation_error_degrees": 1.0017912669061661e-05,
+      "preserved_constraints": 66,
+      "previous_action_preserved": true,
+      "cancel_restores_action": true,
+      "repeat_preparation_stable": true
+    },
+    {
+      "fixture": "PMX-1",
+      "motion": "wave",
+      "bones": 332,
+      "fixed_names": 45,
+      "mapped_joints": 22,
+      "frames": 73,
+      "rotation_error_degrees": 1.0017912669061661e-05,
+      "preserved_constraints": 52,
+      "previous_action_preserved": true,
+      "cancel_restores_action": true,
+      "repeat_preparation_stable": true
+    },
+    {
+      "fixture": "PMX-2",
+      "motion": "wave",
+      "bones": 643,
+      "fixed_names": 27,
+      "mapped_joints": 22,
+      "frames": 73,
+      "rotation_error_degrees": 1.0017912669061661e-05,
+      "preserved_constraints": 74,
+      "previous_action_preserved": true,
+      "cancel_restores_action": true,
+      "repeat_preparation_stable": true
+    },
+    {
+      "fixture": "PMX-3",
+      "motion": "wave",
+      "bones": 283,
+      "fixed_names": 11,
+      "mapped_joints": 22,
+      "frames": 73,
+      "rotation_error_degrees": 1.0017912669061661e-05,
+      "preserved_constraints": 66,
+      "previous_action_preserved": true,
+      "cancel_restores_action": true,
+      "repeat_preparation_stable": true
+    }
+  ],
+  "save_reopen": {
+    "blender": "5.2.3 LTS",
+    "sample_matrices": 54,
+    "max_matrix_delta": 0.0,
+    "save_reopen_preserves_pose": true
+  },
+  "gui_panel_draw": true,
+  "actual_preview_undo_redo": true,
+  "core_sha256": {
+    "humanoid.py": "47fbfbf7209956a6999f7ac2052d6bf511f77fd19b86d64e55bcb90dcd2c1816",
+    "motion_retarget.py": "65ba30862c4b712f2c82dda80954bfdea6586bb7b3cd39a018f0e1efcc13bec8",
+    "pmx_adapter.py": "88d78f8fc927d8a07f2f41d5d656165f070e236596cff2cd308a667658d2659e"
+  }
+}

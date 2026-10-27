@@ -52,8 +52,7 @@ def _save_output(output, output_format, model, device, standard_tpose, prefix="k
             skeleton = skeleton.somaskel77.to(device)
         can_do_bvh = hasattr(skeleton, "name") and "somaskel" in skeleton.name
         if not can_do_bvh:
-            _out({"status": "progress",
-                  "message": "BVH not supported for this model — using NPZ."})
+            raise ValueError("所选 Kimodo 模型不支持 BVH，无法作为当前人形重定向的动作源")
 
     suffix = ".bvh" if can_do_bvh else ".npz"
     fd, out_path = tempfile.mkstemp(suffix=suffix, prefix=prefix)
@@ -92,8 +91,7 @@ def _load_constraints(constraints_json, model):
                 f.write(constraints_json)
             constraint_lst = load_constraints_lst(tmp_con, model.skeleton)
         except Exception as exc:
-            _out({"status": "progress",
-                  "message": f"Warning: constraints skipped ({exc})"})
+            raise ValueError(f"生成约束加载失败：{exc}") from exc
         finally:
             if tmp_con and os.path.exists(tmp_con):
                 try:
@@ -276,12 +274,12 @@ def main() -> None:
         model = load_model(args.model, device=device)
         model.model_name = args.model
         model.offload_enabled = bool(args.offload)
-        
+
         if args.offload:
             try:
                 from kimodo.demo.memory_manager import manager as memory_manager
                 from kimodo.demo.embedding_cache import CachedTextEncoder
-                
+
                 memory_manager.offload_enabled = True
                 memory_manager.register_model(args.model, model)
                 if hasattr(model, "text_encoder"):

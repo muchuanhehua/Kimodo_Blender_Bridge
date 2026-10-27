@@ -1,204 +1,56 @@
+# Kimodo 动作桥接
 
+中文 Kimodo 动作生成与通用人形动作重定向插件。首期支持通过 MMD Tools 导入 PMX、自动骨骼修复、参考姿态校准与独立动作输出；FBX 导入适配留待后续。
 
-A Blender addon that generates AI-driven human motion via [NVIDIA Kimodo](https://github.com/nv-tlabs/kimodo) and imports it directly into your scene — no copy-pasting, no manual BVH wrangling.
+本项目基于 [Lewdineer/Kimodo_Blender_Bridge](https://github.com/lewdineer/Kimodo_Blender_Bridge) 的社区插件开发，保留原作者署名和 GPL 声明。上游原始说明保存在 [UPSTREAM.md](UPSTREAM.md)。Kimodo 模型与运行依赖沿用各自的许可和来源。
 
-## Star History
+## 版本与安装
 
-<a href="https://www.star-history.com/?repos=lewdineer%2FKimodo_Blender_Bridge&type=date&legend=top-left">
- <picture>
-   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/chart?repos=lewdineer/Kimodo_Blender_Bridge&type=date&theme=dark&legend=top-left&sealed_token=gg3e8bjBVO1mASsY7F2FfwXezEB5zKIehjMw-s8K0AeGqeg94JCIRoPyBtxv55OxO9Pvi5cFwEyXXpA7wOwC8khA42N0EIz--WX4-WLBhTkFav2p97mv0gNKScQBzfaLta9xHnw9ELr6Ntm0RTGEbBvwvSp8RubVcK10aKSlsQs3pwmd4LuWqQp0kpux" />
-   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/chart?repos=lewdineer/Kimodo_Blender_Bridge&type=date&legend=top-left&sealed_token=gg3e8bjBVO1mASsY7F2FfwXezEB5zKIehjMw-s8K0AeGqeg94JCIRoPyBtxv55OxO9Pvi5cFwEyXXpA7wOwC8khA42N0EIz--WX4-WLBhTkFav2p97mv0gNKScQBzfaLta9xHnw9ELr6Ntm0RTGEbBvwvSp8RubVcK10aKSlsQs3pwmd4LuWqQp0kpux" />
-   <img alt="Star History Chart" src="https://api.star-history.com/chart?repos=lewdineer/Kimodo_Blender_Bridge&type=date&legend=top-left&sealed_token=gg3e8bjBVO1mASsY7F2FfwXezEB5zKIehjMw-s8K0AeGqeg94JCIRoPyBtxv55OxO9Pvi5cFwEyXXpA7wOwC8khA42N0EIz--WX4-WLBhTkFav2p97mv0gNKScQBzfaLta9xHnw9ELr6Ntm0RTGEbBvwvSp8RubVcK10aKSlsQs3pwmd4LuWqQp0kpux" />
- </picture>
-</a>
+当前版本 **1.6.0**。安装包见 [Releases](https://github.com/muchuanhehua/Kimodo_Blender_Bridge/releases)。
 
-## Links / Video guide
-Youtube tutorial: https://youtu.be/nbiaS43Ncng
-Superhive: https://superhivemarket.com/products/kimodoblenderbridge
+推荐在 Blender「偏好设置 → 获取扩展 → 仓库」添加远程仓库：
 
----
+`https://raw.githubusercontent.com/muchuanhehua/Kimodo_Blender_Bridge/main/release/index.json`
 
-## Tested on 
-**Blender 5.1 / 4.4**
+同步后安装「Kimodo 动作桥接」。后续通过这个仓库更新。也可以从 Release 下载 ZIP，使用「从磁盘安装」。
 
-**Arch Linux RTX 3090 Python 3.12**
+已实际验证：Windows、Blender **5.2.3 LTS**、MMD Tools **4.5.14**、NVIDIA RTX 4060 Ti 16GB。Kimodo 使用独立 Python 环境，不往 Blender 内置 Python 安装 PyTorch。
 
-**Windows 11 RTX 1080 Python 3.12**
+## 使用流程
 
-**Windows 11 RTX 5070 Python 3.13**
+1. 在 `3D 视图 → 侧栏 → Kimodo → 模型准备` 点击「导入 PMX 并自动修复」。已有角色可选中模型后点击「使用所选角色并自动修复」。
+2. 在「Kimodo 环境」指定独立环境 Python，或使用自动安装。点击「启动 Kimodo」。
+3. 在「动作生成」选择中文预设，检查英文动作描述、时长和随机种子，生成动作。也可以导入已有 BVH。
+4. 在「动作重定向与保存」指定动作源和目标，点击「自动匹配骨骼」，检查映射、帧范围和角色移动方式。
+5. 点击「预览重定向」。这会创建独立预览 Action；「恢复原动作」可还原之前的 Action、姿态和 IK 设置。
+6. 检查满意后，填写动作名称并点击「保存为独立动作」。原动作保留，模型的辅助骨、原有约束和权重不被删除。
 
-<img width="1237" height="1257" alt="image" src="https://github.com/user-attachments/assets/71a1666d-a460-40eb-af23-1dbb8ab750cb" />
+PMX 自动修复会明确启用导入器的骨序修复，并修复骨名编码、15 字节长度限制和重名。原名称作为别名保留，修复后重新检测人形关节。骨名修复不能代替骨轴、比例和参考姿态校准，后者由重定向核心完成。
 
+本版按 SOMA 的实际层级识别源骨架；例如 SOMA 的 `LeftLeg` 是大腿，不能按 Mixamo 的同名小腿处理。源动作按当前场景帧率导入，30 FPS 动作在 24 FPS 场景中保持时间长度。
 
----
+## Kimodo 环境
 
-## How it works
+自动安装沿用社区 Aero-Ex 离线适配后端，下载文本编码器和 NVIDIA SOMA 模型。下载支持分段、续传与 LFS SHA256 校验，安装完成后可离线生成。
 
-Blender's embedded Python cannot load PyTorch or Kimodo directly. The addon solves this with a two-process bridge:
+开发环境可用系统 Python 3.12 执行：
 
-```
-Blender (addon)                Kimodo venv
-  subprocess_client.py  ─────▶  bridge_server.py
-                        ◀─────  (model loaded once, handles requests)
+```text
+python tools/setup_runtime.py
 ```
 
-The bridge server loads the Kimodo model once at startup and then responds to generation requests over stdin/stdout. Blender stays responsive while generation runs in a background thread.
+默认创建项目下忽略的 `.runtime/kimodo-venv`。在插件高级设置或偏好设置中指定这个环境目录与其中的 `Scripts/python.exe`。模型、依赖和令牌均不进入安装包。
 
----
+中文界面不代表模型原生支持任意中文动作描述。本版提供中文动作预设，对应的英文描述可查看、修改；自由中文翻译后续另行适配。
 
-## Requirements
+## 验证与边界
 
-| Requirement | Notes |
-|---|---|
-| Blender 4.0+ | Tested on 5.1 (Windows & Arch Linux) |
-| Python 3.10–3.12 | System Python used to create the managed venv |
-| NVIDIA GPU | 8 GB+ VRAM recommended; 16 GB+ for best results |
-| CUDA | Must match your PyTorch build (CUDA 12.1 installed by default) |
-| ~10 GB disk | For the managed venv, model weights, and LLM2Vec encoder |
+- 三个不同层级、分别有 332、643、283 根骨骼的 PMX 角色，均识别出 22 个人形关节。
+- 实际生成 Kimodo 走路和挥手动作，并在三个角色上检查导入、重复修复、重定向、原 Action 保留、恢复与独立动作输出。
+- 原约束与原骨架父子层级保留；保存重开后抽查的 54 个姿态矩阵一致。
+- 首版采用经过姿态校准的 FK 重定向，尚未提供足部接触修正、精细手指、表情或 FBX 导入适配。
+- 启用的 NLA 轨道可能混合目标动作，本版会明确要求先停用这些轨道。
 
-> **Low VRAM?** Run `kimodo_textencoder --device cpu` in a separate terminal with the Kimodo venv activated. This offloads the text encoder to CPU and frees several GB of VRAM.
+验证入口为 `tools/verify_blender.py` 和 `tools/inspect_saved.py`。私人参考模型、动作、工程和图像证据放在仓库外的 Test 或忽略的 `.verification/` 中，不随源码和安装包分发。
 
----
-
-## Installation
-
-As of v1.2.0 Kimodo installs itself automatically — no terminal required. The addon is also compatible with the Blender 4.2+ Extensions platform (includes `blender_manifest.toml`).
-
-### 1 — Install the Blender addon
-
-1. Download or clone this repository (top-right **Code → Download ZIP**).
-2. Open Blender → **Edit → Preferences → Add-ons → Install from Disk…**
-3. Select the downloaded zip and enable **"Kimodo Motion Generator"**.
-
-### 2 — Click "Install Kimodo (Auto)"
-
-Open the **Kimodo** N-Panel tab (press `N` in the 3D Viewport), expand **Connection**, and click **Install Kimodo (Auto)**.
-
-The installer will:
-- Create a managed Python venv at `~/.kimodo-venv/`
-- Install PyTorch (CUDA 12.1), all Kimodo dependencies, and the [Aero-Ex offline fork](https://github.com/Aero-Ex/kimodo)
-- Download the LLM2Vec text-encoder model locally and patch it for offline use
-- Download the `Kimodo-SOMA-RP-v1` model weights into the HF cache
-- Set the Python path automatically when done
-
-Progress is shown live in the Connection panel. The full log is printed to the system console (launch Blender from a terminal, or on Windows use **Window → Toggle System Console**).
-
-> **Requires:** Python 3.10–3.12 on your system PATH, internet access, and ~10 GB of free disk space. After the initial install, Kimodo runs fully offline.
-
-### Manual installation (advanced)
-
-If you already have Kimodo installed in your own venv, skip the auto-installer and paste the path to your venv Python into the **Kimodo Python** field in the Connection panel.
-
----
-
-## Quick Start
-
-### Generate motion from a text prompt
-
-1. **Start** the bridge: click **Start Kimodo** in the Connection panel.  
-   The status line will show *Loading model…* then *Ready* once the model is loaded (this takes 10–60 s the first time).
-
-2. Open the **Generate** panel. It opens in **Single Clip** mode — type a prompt (e.g. `a person jogs in a circle`), set a duration, and click **Generate Motion**.
-
-3. A `Kimodo_Source` armature will appear in your scene with the generated motion applied.
-
-> **30 FPS tip:** Kimodo always generates at 30 FPS. If your scene is set to a different frame rate, an alert will appear above the Generate button with a **Set to 30 FPS** button.
-
-### Use multiple segments
-
-Switch the **Generate** panel to **Timeline** mode for this. Each segment is an independent text prompt mapped to a frame range. **Generate Motion** sends every enabled segment to Kimodo in a single model call, producing one continuous animation with smooth transitions between prompts.
-
-- Segments are listed in order. The **Start** frame of each segment after the first is automatically locked to the **End** frame of the previous segment — just drag the End frame and the next segment's Start updates automatically.
-- Use **Duplicate** to copy a segment and place it immediately after.
-- Use **↑ / ↓** to reorder segments.
-
-<img width="2676" height="1181" alt="image" src="https://github.com/user-attachments/assets/a5d336e9-f32f-44c7-9aca-a09983e869d6" />
-
-
-### Retarget to your own rig
-
-After generating motion you can drive any armature from the Kimodo source:
-
-1. Open the **Retarget** panel.
-2. Set **Source** to `Kimodo_Source` and **Target** to your character rig.
-3. Click **Auto-Match Bones** — the addon fuzzy-matches Kimodo bone names against your rig.
-4. Review the mapping, enable/disable pairs, choose a retarget mode per bone. Its recommended to also adjust the scale of the armature to match your character and then applying it with CTRL+A.
-5. Choose the type of constraint the plugin should use, "Child of", "Copy Rotation" etc...
-6. Click **Apply Constraints** — Blender constraint drivers are added to your rig.
-7. Click **Bake & Remove Constraints** when you are happy — keyframes are baked onto your rig and all Kimodo constraints are removed, leaving a clean, self-contained animation.
-
-Use **Save / Load Preset** to store bone mappings for a rig and reuse them later.
-
-<img width="1233" height="839" alt="image" src="https://github.com/user-attachments/assets/d76290db-7662-4223-9cd6-7083f89b35ca" />
-
-### Motion constraints
-
-Spatial goals can be given to Kimodo so the generated motion passes through specific positions:
-
-| Constraint | What it controls |
-|---|---|
-| Root XZ | Where the character's root lands on the ground plane |
-| Full-Body | A full joint-pose keyframe (pose a reference armature) |
-| Left / Right Hand | Wrist end-effector position |
-| Left / Right Foot | Foot / heel end-effector position |
-
-To add a constraint:
-1. Move the 3D cursor (or select an armature) to the desired position.
-2. Set the timeline to the target frame.
-3. In the **Motion Constraints** panel, click the constraint type.
-
-**Auto-Origin** (off by default) shifts all constraint positions so the earliest root waypoint lands at Kimodo's world origin — author constraints anywhere in your scene without worrying about absolute coordinates.
-
----
-
-## Panel reference
-
-| Panel | What's in it |
-|---|---|
-| **Connection** | Kimodo Python path, model selector, Start / Stop bridge |
-| **Generate** | Single Clip mode (one prompt, duration, seed) or Timeline mode (segment list, frame ranges) — one Generate Motion button either way |
-| **Motion Constraints** | Spatial waypoints for the generated motion |
-| **Retarget** | Bone mapping, Apply Constraints, Bake |
-| **Help** | Quick-start checklist, VRAM tip |
-
----
-
-## Troubleshooting
-
-**Bridge won't start / "Failed to start"**
-- Check the system console for `[Kimodo Bridge]` lines — the full Python/PyTorch error is printed there.
-- Check that the Python path points to the venv Python that has Kimodo installed.
-- If you used the auto-installer and it failed partway through, click **Retry Install** — it will wipe the partial venv and start clean.
-
-**CUDA out of memory**
-- Use a shorter duration or fewer segments.
-
-**Retargeted rig is in the wrong pose**
-- Try a different retarget mode per bone (Copy Rotation vs Copy Transforms vs Child Of).
-- Make sure the source and target armatures are both in their rest pose / have the same pose before trying the retargeting, and have scale applied on the armature.
-
-**Frames from imorted animation dont match**
-- Kimodo generates at exactly 30 FPS. Use the **Set to 30 FPS** button that appears in the Generate panel when your scene is at a different frame rate.
-
----
-
-## File overview
-
-| File | Role |
-|---|---|
-| `__init__.py` | Blender addon entry point |
-| `bridge_server.py` | Subprocess: loads Kimodo, handles generation requests |
-| `subprocess_client.py` | Blender-side bridge manager |
-| `operators.py` | All `bpy.ops.kimodo.*` operators |
-| `properties.py` | All `bpy.props` scene settings |
-| `panels.py` | N-panel UI |
-| `constraints.py` | Converts Blender constraint markers to Kimodo JSON |
-| `retarget.py` | Applies / bakes retargeting constraints |
-| `ui_list.py` | UIList helper for the bone mapping panel |
-| `setup_operator.py` | One-click auto-installer for Kimodo and all dependencies |
-
----
-
-## License
-
-See [LICENSE](LICENSE).
+当前维护与发布约束见 [AGENTS.md](AGENTS.md)。

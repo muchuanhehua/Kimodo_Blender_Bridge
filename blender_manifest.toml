@@ -1,13 +1,13 @@
 schema_version = "1.0.0"
 
 id = "kimodo_blender_bridge"
-version = "1.5.8"
-name = "Kimodo Blender Bridge"
-tagline = "Generate human motion with NVIDIA Kimodo AI"
-maintainer = "Lewdineer"
+version = "1.6.0"
+name = "Kimodo 动作桥接"
+tagline = "中文动作生成、PMX 骨骼准备与通用人形动作重定向"
+maintainer = "muchuanhehua (based on Lewdineer)"
 type = "add-on"
 
-website = "https://github.com/nv-tlabs/kimodo"
+website = "https://github.com/muchuanhehua/Kimodo_Blender_Bridge"
 
 # Extension system was introduced in Blender 4.2
 blender_version_min = "4.2.0"
@@ -18,3 +18,10 @@ license = [
 ]
 
 tags = ["Animation"]
+
+[permissions]
+files = "导入角色和动作，读写本插件预设与独立运行环境"
+network = "安装 Kimodo 依赖、下载模型和检查扩展更新"
+
+[build]
+paths_exclude_pattern = ["__pycache__/", ".git/", ".runtime/", ".verification/", "tools/", "release/", "design/", "AGENTS.md", ".gitignore", ".gitattributes", ".runtime-setup.log"]

@@ -6,6 +6,8 @@ All N-panel UI panels in the 3D Viewport → Kimodo tab.
 import os
 import textwrap
 
+from .i18n import ui, zh, report, localize_class
+
 import bpy
 import json
 from bpy.types import Panel
@@ -105,10 +107,10 @@ class KIMODO_PT_Connection(KIMODO_PanelBase, Panel):
     bl_label    = "⚙  Connection"
     bl_idname   = "KIMODO_PT_Connection"
     bl_order    = 10
-    
+
 
     def draw(self, context):
-        layout = self.layout
+        layout = ui(self.layout)
         s = context.scene.kimodo
 
         running = s.is_connected
@@ -212,7 +214,7 @@ class KIMODO_PT_Connection(KIMODO_PanelBase, Panel):
         # --- Model selector ---
         row = layout.row(align=True)
         row.label(text="Model:", icon='ARMATURE_DATA')
-        row.prop(s, "kimodo_model", text="")
+        row.label(text="Kimodo SOMA")
         row.enabled = not running
 
         # --- Offload toggle ---
@@ -313,7 +315,7 @@ class KIMODO_PT_Generate(KIMODO_PanelBase, Panel):
     bl_order   = 14
 
     def draw(self, context):
-        layout = self.layout
+        layout = ui(self.layout)
         s = context.scene.kimodo
         layout.enabled = not s.is_generating
 
@@ -324,7 +326,7 @@ class KIMODO_PT_Generate(KIMODO_PanelBase, Panel):
 
         row = layout.row(align=True)
         row.label(text="Model:")
-        row.prop(s, "model_type", expand=True)
+        row.label(text="SOMA 人形")
 
         layout.separator(factor=0.5)
 
@@ -349,10 +351,7 @@ class KIMODO_PT_Generate(KIMODO_PanelBase, Panel):
         # --- Shared: FPS warning ---
         scene_fps = context.scene.render.fps / context.scene.render.fps_base
         if abs(scene_fps - 30.0) > 0.01:
-            fps_box = layout.box()
-            fps_box.alert = True
-            fps_box.label(text=f"Scene is {scene_fps:.4g} FPS — Kimodo needs 30 FPS", icon='ERROR')
-            fps_box.operator("kimodo.set_to_30fps", text="Set to 30 FPS", icon='RECOVER_LAST')
+            layout.label(text=f"动作按当前场景 {scene_fps:g} FPS 导入", icon='TIME')
 
         layout.separator()
 
@@ -400,6 +399,9 @@ class KIMODO_PT_Generate(KIMODO_PanelBase, Panel):
         row.operator("kimodo.import_bvh", text="", icon='FILE_FOLDER').filepath = ""
 
     def _draw_single(self, layout, context, s):
+        presets = layout.row(align=True)
+        for identifier, label in (("WALK", "走路"), ("WAVE", "挥手"), ("SQUAT", "下蹲"), ("TURN", "转身")):
+            presets.operator("kimodo.motion_preset", text=label).preset = identifier
         layout.label(text="Prompt:")
         layout.prop(s, "prompt", text="")
 
@@ -488,7 +490,7 @@ class KIMODO_PT_Constraints(KIMODO_PanelBase, Panel):
     bl_options = {'DEFAULT_CLOSED'}
 
     def draw(self, context):
-        layout = self.layout
+        layout = ui(self.layout)
         s = context.scene.kimodo
 
         # --- Quick-add buttons ---
@@ -630,13 +632,13 @@ class KIMODO_PT_Constraints(KIMODO_PanelBase, Panel):
 # ---------------------------------------------------------------------------
 
 class KIMODO_PT_Retarget(KIMODO_PanelBase, Panel):
-    bl_label   = "🦴  Retarget"
+    bl_label   = "③ 动作重定向与保存"
     bl_idname  = "KIMODO_PT_Retarget"
     bl_order   = 30
     bl_options = {'DEFAULT_CLOSED'}
 
     def draw(self, context):
-        layout = self.layout
+        layout = ui(self.layout)
         s = context.scene.kimodo
 
         # Armature pickers
@@ -644,13 +646,13 @@ class KIMODO_PT_Retarget(KIMODO_PanelBase, Panel):
         box.label(text="Armatures", icon='ARMATURE_DATA')
         box.prop(s, "source_armature", text="Source (Kimodo)")
         box.prop(s, "target_armature", text="Target (Your Rig)")
-        box.prop(s, "retarget_root_bone", text="Root Bone")
+        box.prop(s, "retarget_root_mode")
 
         layout.separator()
 
         # Bone mapping list
         layout.label(text="Bone Mapping:", icon='BONE_DATA')
-        layout.label(text="Link toggle = target bone's Inherit Rotation", icon='LINKED')
+        layout.label(text="参考姿态与骨轴校准 · 保留原有约束", icon='LINKED')
 
         if s.source_armature and s.target_armature:
             # Auto-match button
@@ -674,13 +676,14 @@ class KIMODO_PT_Retarget(KIMODO_PanelBase, Panel):
         # Apply / Remove constraints
         row = layout.row(align=True)
         row.operator("kimodo.apply_retargeting",  text="Apply Constraints", icon='CONSTRAINT_BONE')
-        row.operator("kimodo.remove_retargeting", text="",                  icon='X')
+        row.operator("kimodo.remove_retargeting", text="恢复原动作", icon='LOOP_BACK')
 
         layout.separator()
 
         # Bake section
         box = layout.box()
         box.label(text="Bake Animation", icon='RENDER_ANIMATION')
+        box.prop(s, "retarget_action_name")
         row = box.row(align=True)
         row.prop(s, "bake_start_frame", text="Start")
         row.prop(s, "bake_end_frame",   text="End")
@@ -731,7 +734,7 @@ class KIMODO_PT_Help(KIMODO_PanelBase, Panel):
     bl_options = {'DEFAULT_CLOSED'}
 
     def draw(self, context):
-        layout = self.layout
+        layout = ui(self.layout)
         col = layout.column(align=True)
         col.label(text="Quick Start:", icon='QUESTION')
         col.separator()
@@ -766,7 +769,7 @@ _classes = [
 
 def register():
     for cls in _classes:
-        bpy.utils.register_class(cls)
+        bpy.utils.register_class(localize_class(cls))
 
 
 def unregister():
