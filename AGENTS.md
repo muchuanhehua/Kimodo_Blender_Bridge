@@ -6,18 +6,20 @@
 - 用户于 2026-10-27 要求 Fork 仓库并预览中文化方案；随后明确定位为通用动作重定向插件，首期适配 PMX 模型，后续扩展 FBX 模型，二者均需重定向。
 - Fork：`https://github.com/muchuanhehua/Kimodo_Blender_Bridge`。
 - 上游：`https://github.com/lewdineer/Kimodo_Blender_Bridge`；本次读取基线为 `7181a24624cc98549791540c7fce5b78e4496e12`，声明版本为 `1.5.8`。
-- 当前发布版本为 1.6.1，已实现中文界面、PMX 自动修复、人形语义识别、姿态与比例校准，以及独立 Action 预览、恢复和保存。真实 Kimodo 走路、挥手动作已在三个角色验证；保存重开与桌面预览撤销重做通过。Release 与标签已发布，本地 Blender 已通过远程仓库更新、配置，并通过桌面 GPU 启动、生成及 BVH 导入验证。
+- 当前发布版本为 1.6.2，已实现中文界面、PMX 自动修复、人形语义识别、姿态与比例校准、按实际足底几何进行的平地接触与防滑，以及独立 Action 预览、恢复和保存。Release 与标签已发布，本地 Blender 已通过远程仓库更新，24 个安装文件和新进程配置核验通过，安装后的贴地预览、撤销与重做通过。
 - `design/kimodo-retarget-preview.html` 只演示拟议界面和流程，按钮不连接 Blender 或 Kimodo。
 
 ## 范围与资源
 
 - 用户已于 2026-10-27 明确授权实施中文化、PMX 导入后自动修复和动作重定向，使用 Test 的三个角色实际验证，提交并更新仓库，再远程更新、配置本地 Blender；FBX 后续适配。
 - 本轮授权包含所需的 Kimodo 环境与模型配置、独立 Blender 验证、插件安装和更新配置；不改动私人原始 PMX 文件，不覆盖用户已有工程。
+- 用户本轮追加要求修复贴地和滑步，并明确只重录行走、不再重录挥手；通用人形核心按实际脚底或鞋底自动校准，不按三个角色、是否穿鞋或固定鞋跟高度写分支。
 - 保留上游作者署名和许可证声明；模型与第三方组件单独记录来源，不将模型权重、私人 PMX、贴图、动作和 Blender 工程加入发布仓库。
 - 环境、模型缓存和私人验证证据保存在忽略的 `.runtime/`、`.verification/` 中，不能进入发布包或 Git 提交。
 - 本项目的职责为动作生成、模型准备和通用人形动作重定向；MAVR 为独立材质与展示项目。
 - 工作区 `../Test/原神模型/` 由用户提供，含刻晴、奥黛塔、希诺宁角色及道具，供参考与验证；原始资源保持原位，不复制进本仓库或安装包。
-- 本轮实际验证环境为 Blender 5.2.3 LTS、MMD Tools 4.5.14；1.6.0 的两个真实 Kimodo 动作分别在三个 PMX 角色上通过。1.6.1 补齐动态界面文字，构建时核对相同核心指纹，并另做实际安装、桌面启动和生成导入验证。私密证据位于 `.verification/`，公开的脱敏摘要位于 `release/verification-v1.6.0.json`、`release/verification-v1.6.1.json`。
+- 本轮实际验证环境为 Blender 5.2.3 LTS、MMD Tools 4.5.14；历史 1.6.0 曾验证三个角色的走路与挥手，1.6.1 补齐中文。1.6.2 修复水平位移被参考姿态倾斜转换成上升的问题，并在三个角色同源行走中检查实际变形网格与支撑期轨迹：接触高度误差小于 0.9 毫米，支撑期脚踝横移小于 0.02 毫米，源动作、原约束与层级不变。另通过赤脚、平底、厚底、左右不同底厚与缩放的程序化几何回归。最新公开摘要为 `release/verification-v1.6.2.json`。
+- 私密贴地证据位于 `.verification/foot-contact/`；`before-trajectories.json` 记录源动作和旧版三个角色的轨迹，`three-models-kimodo-walk-grounded.json` 记录修复结果，`support-geometry.json` 记录正确世界坐标轴下的四种几何回归。录制输入为 `pmx-kimodo-walk-fixed.blend`，视频位于该目录的 `videos/`，包含修复后行走和上旧下新的同步对照，不进入仓库或安装包。
 
 ## 后续实现约束
 
@@ -33,9 +35,9 @@
 
 ## 构建与更新
 
-- 构建入口为 `tools/build_release.py --blender <Blender executable>`，使用原生扩展构建与校验，检查版本、精确载荷、源码与 ZIP 字节一致性、CRC、SHA256 以及实际验证核心指纹。
+- 构建入口为 `tools/build_release.py --blender <Blender executable> --evidence <verification.json>`，使用原生扩展构建与校验，检查版本、精确载荷、源码与 ZIP 字节一致性、CRC、SHA256 以及实际验证核心指纹。当前贴地实测入口为 `tools/verify_grounding.py`、`tools/verify_support_geometry.py`；不得沿用旧版挥手报告代替新核心验证。
 - 发布内容为源码、`release/index.json`、构建与脱敏验证摘要、版本 ZIP。远程仓库入口为 GitHub main 的 `release/index.json`，安装包下载自对应 Release。
 - 已公开的版本、tag 和 ZIP 不覆盖；发布后载荷变动需递增版本。发布前后的纯项目规则或安装状态记录不改变插件载荷时不重新打包。
-- 1.6.1 发布源码为 `05cac993ab603ba9981f77042050f97fc9c76f5d`；ZIP SHA256 为 `510eb8734cad7846f266a6ba6b618369b3cb93ec440f202572d07597cff448da`，GitHub Release 摘要一致，本地 23 个安装文件已逐一核对。远程仓库入口为 `https://raw.githubusercontent.com/muchuanhehua/Kimodo_Blender_Bridge/main/release/index.json`。
-- 本地扩展模块为 `bl_ext.kimodo.kimodo_blender_bridge`。运行环境位于忽略的 `.runtime/kimodo-venv/`，偏好设置已保存；新 Blender 进程验证 23 个安装文件与发布包一致，并能自动定位运行环境。配置复现入口为 `tools/configure_installed.py`，`--update` 仅同步并安装 Kimodo 仓库中的此扩展。实际安装与桌面结果保存在 `.verification/installed-fresh-process.json`、`.verification/installed-gui-result.json`，桌面验证工程为 `.verification/installed-demo-v1.6.1.blend`。
+- 1.6.2 发布源码为 `b400512f5930c8223d4c05a2214118d44a4e3c63`；ZIP SHA256 为 `441140dd6afa2aa3104c57c9dcb5c1db369f62325eab16c2ac9ec7ae52853e53`，GitHub Release 摘要一致，本地 24 个安装文件已逐一核对。远程仓库入口为 `https://raw.githubusercontent.com/muchuanhehua/Kimodo_Blender_Bridge/main/release/index.json`。
+- 本地扩展模块为 `bl_ext.kimodo.kimodo_blender_bridge`。运行环境位于忽略的 `.runtime/kimodo-venv/`，偏好设置已保存。配置复现入口为 `tools/configure_installed.py`，`--update` 仅同步并安装 Kimodo 仓库中的此扩展。最新安装与桌面结果为 `.verification/foot-contact/installed-update.json`、`installed-fresh-process.json`、`installed-preview.json`。桌面当前演示工程为该目录的 `installed-walk-demo-v1.6.2.blend`；更新前的未保存状态已复制保留为 `local-before-1.6.2-update.blend`。
 - 本次桌面验证脚本曾在无窗口上下文时切换侧栏导致 Blender 原生崩溃；崩溃栈定位在 `ED_region_visibility_change_update`。工具脚本已使用显式窗口上下文，且不再赋值只读侧栏类别；后续桌面面板与预览撤销重做通过。此脚本不进入安装包。

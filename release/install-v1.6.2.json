@@ -1,0 +1,31 @@
+{
+  "version": "1.6.2",
+  "module": "bl_ext.kimodo.kimodo_blender_bridge",
+  "remote_repository": "https://raw.githubusercontent.com/muchuanhehua/Kimodo_Blender_Bridge/main/release/index.json",
+  "payload_files_verified": 24,
+  "fresh_process_preferences_verified": true,
+  "actual_operator_preview": true,
+  "preview_undo_redo": true,
+  "preview_contact": {
+    "ground_height": 0.0,
+    "rest_ground_offset": -0.004637300968170166,
+    "max_ankle_solve_error": 4.0481154613180815e-07,
+    "max_contact_height_error": 0.0005132220685482025,
+    "max_penetration": 0.0002771727740764618,
+    "max_stance_ankle_drift": {
+      "l": 2.2708998105120914e-07,
+      "r": 0.0
+    },
+    "max_pelvis_reach_adjustment": 0.03503918583872423,
+    "contact_spans": {
+      "l": [
+        [
+          1,
+          6
+        ]
+      ],
+      "r": []
+    },
+    "world_foot_lock": true
+  }
+}
