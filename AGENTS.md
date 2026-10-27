@@ -6,7 +6,7 @@
 - 用户于 2026-10-27 要求 Fork 仓库并预览中文化方案；随后明确定位为通用动作重定向插件，首期适配 PMX 模型，后续扩展 FBX 模型，二者均需重定向。
 - Fork：`https://github.com/muchuanhehua/Kimodo_Blender_Bridge`。
 - 上游：`https://github.com/lewdineer/Kimodo_Blender_Bridge`；本次读取基线为 `7181a24624cc98549791540c7fce5b78e4496e12`，声明版本为 `1.5.8`。
-- 当前候选版本为 1.6.0，已实现中文界面、PMX 自动修复、人形语义识别、姿态与比例校准，以及独立 Action 预览、恢复和保存。真实 Kimodo 走路、挥手动作已在三个角色验证；保存重开与桌面预览撤销重做通过。发布与本地安装状态以本轮最终核验记录为准。
+- 当前发布版本为 1.6.0，已实现中文界面、PMX 自动修复、人形语义识别、姿态与比例校准，以及独立 Action 预览、恢复和保存。真实 Kimodo 走路、挥手动作已在三个角色验证；保存重开与桌面预览撤销重做通过。Release 与标签已发布，本地 Blender 已通过远程仓库安装、配置，并通过桌面 GPU 启动、生成及 BVH 导入验证。
 - `design/kimodo-retarget-preview.html` 只演示拟议界面和流程，按钮不连接 Blender 或 Kimodo。
 
 ## 范围与资源
@@ -36,4 +36,6 @@
 - 构建入口为 `tools/build_release.py --blender <Blender executable>`，使用原生扩展构建与校验，检查版本、精确载荷、源码与 ZIP 字节一致性、CRC、SHA256 以及实际验证核心指纹。
 - 发布内容为源码、`release/index.json`、构建与脱敏验证摘要、版本 ZIP。远程仓库入口为 GitHub main 的 `release/index.json`，安装包下载自对应 Release。
 - 已公开的版本、tag 和 ZIP 不覆盖；发布后载荷变动需递增版本。发布前后的纯项目规则或安装状态记录不改变插件载荷时不重新打包。
+- 1.6.0 发布源码为 `362514dcd7fa8c3321249c1839d6b4c68523b29e`；ZIP SHA256 为 `a0ce0cbab7952ddd5a09d6bbef2879d835358a2a062e6b0c22b30264cfa481e5`，GitHub Release 下载后的哈希一致。远程仓库入口为 `https://raw.githubusercontent.com/muchuanhehua/Kimodo_Blender_Bridge/main/release/index.json`。
+- 本地扩展模块为 `bl_ext.kimodo.kimodo_blender_bridge`。运行环境位于忽略的 `.runtime/kimodo-venv/`，偏好设置已保存；新 Blender 进程验证 23 个安装文件与发布包一致，并能自动定位运行环境。配置复现入口为 `tools/configure_installed.py`，实际安装与桌面结果保存在 `.verification/installed-fresh-process.json`、`.verification/installed-gui-result.json`。
 - 本次桌面验证脚本曾在无窗口上下文时切换侧栏导致 Blender 原生崩溃；崩溃栈定位在 `ED_region_visibility_change_update`。工具脚本已使用显式窗口上下文，且不再赋值只读侧栏类别；后续桌面面板与预览撤销重做通过。此脚本不进入安装包。

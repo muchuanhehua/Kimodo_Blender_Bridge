@@ -50,15 +50,15 @@ def _draw_history_detail(layout, context, entry):
     if len(prompts) > 1:
         # Multi-segment generation: one line per segment with its own seed
         for i, p in enumerate(prompts):
-            seed_txt = f"   (seed {seed_list[i]})" if i < len(seed_list) else ""
+            seed_txt = f"   （种子 {seed_list[i]}）" if i < len(seed_list) else ""
             _label_wrapped(col, f"{i + 1}.  {p}{seed_txt}", context,
                            icon='TEXT' if i == 0 else 'BLANK1')
-        meta = f"{entry.duration:.1f}s total  ·  {entry.timestamp.replace('T', ' ')}"
+        meta = f"总时长 {entry.duration:.1f} 秒  ·  {entry.timestamp.replace('T', ' ')}"
         if not seed_list:  # entry from a version that only stored the first seed
-            meta = f"Seed: {entry.seed}  ·  {meta}"
+            meta = f"种子：{entry.seed}  ·  {meta}"
     else:
         _label_wrapped(col, entry.prompt, context, icon='TEXT')
-        meta = f"Seed: {entry.seed}  ·  {entry.duration:.1f}s  ·  {entry.timestamp.replace('T', ' ')}"
+        meta = f"种子：{entry.seed}  ·  {entry.duration:.1f} 秒  ·  {entry.timestamp.replace('T', ' ')}"
 
     meta_col = layout.column(align=True)
     _label_wrapped(meta_col, meta, context, icon='TIME')
@@ -469,7 +469,7 @@ class KIMODO_PT_Generate(KIMODO_PanelBase, Panel):
             dur = (seg.end_frame - seg.start_frame + 1) / fps
 
             row3 = col.row(align=True)
-            row3.label(text=f"  {dur:.1f}s · {seg.end_frame - seg.start_frame + 1} frames",
+            row3.label(text=f"  {dur:.1f} 秒 · {seg.end_frame - seg.start_frame + 1} 帧",
                       icon='TIME')
             seed_field = row3.row(align=True)
             seed_field.enabled = seg.seed_mode != 'RANDOM'

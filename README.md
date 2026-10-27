@@ -6,7 +6,7 @@
 
 ## 版本与安装
 
-当前版本 **1.6.0**。安装包见 [Releases](https://github.com/muchuanhehua/Kimodo_Blender_Bridge/releases)。
+当前版本 **1.6.1**。安装包见 [Releases](https://github.com/muchuanhehua/Kimodo_Blender_Bridge/releases)。
 
 推荐在 Blender「偏好设置 → 获取扩展 → 仓库」添加远程仓库：
 

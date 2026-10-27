@@ -22,7 +22,7 @@ Requirements:
 bl_info = {
     "name":        "Kimodo 动作桥接",
     "author":      "Lewdineer, muchuanhehua",
-    "version":     (1, 6, 0),
+    "version":     (1, 6, 1),
     "blender":     (4, 2, 0),
     "location":    "View3D › Sidebar (N-Panel) › Kimodo",
     "description": "中文 Kimodo 动作生成、PMX 自动骨骼修复与人形动作重定向",

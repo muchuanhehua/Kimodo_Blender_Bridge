@@ -52,12 +52,12 @@ def main():
     item = {key: value for key, value in manifest.items() if key != "build"}
     item.update(archive_url=f"https://github.com/muchuanhehua/Kimodo_Blender_Bridge/releases/download/v{manifest['version']}/{filename}",
                 archive_size=archive.stat().st_size, archive_hash="sha256:" + digest)
-    (release / "index.json").write_text(json.dumps({"version": "v1", "blocklist": [], "data": [item]}, ensure_ascii=False, indent=2)+"\n", encoding="utf-8")
+    (release / "index.json").write_text(json.dumps({"version": "v1", "blocklist": [], "data": [item]}, ensure_ascii=False, indent=2)+"\n", encoding="utf-8", newline="\n")
     record = {"version": manifest["version"], "archive": filename, "bytes": archive.stat().st_size,
               "sha256": digest, "payload": fingerprints, "verified_core": evidence["core_sha256"],
               "checks": ["python_syntax", "versions", "native_extension_build", "native_extension_validate",
                          "exact_payload", "zip_crc", "source_archive_bytes", "three_real_pmx_models"]}
-    (release / f"build-v{manifest['version']}.json").write_text(json.dumps(record, ensure_ascii=False, indent=2)+"\n", encoding="utf-8")
+    (release / f"build-v{manifest['version']}.json").write_text(json.dumps(record, ensure_ascii=False, indent=2)+"\n", encoding="utf-8", newline="\n")
     print("RELEASE_VERIFIED", filename, digest, len(fingerprints), flush=True)
 
 

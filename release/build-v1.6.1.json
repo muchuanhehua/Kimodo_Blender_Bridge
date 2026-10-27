@@ -1,0 +1,46 @@
+{
+  "version": "1.6.1",
+  "archive": "kimodo_blender_bridge-1.6.1.zip",
+  "bytes": 115841,
+  "sha256": "510eb8734cad7846f266a6ba6b618369b3cb93ec440f202572d07597cff448da",
+  "payload": {
+    "CHANGELOG.md": "c81f5f3e8a38621032c0a8ce42a80c9ab46ebce0f5b19e7e352cededa7261e61",
+    "LICENSE": "edaef632cbb643e4e7a221717a6c441a4c1a7c918e6e4d56debc3d8739b233f6",
+    "NOTICE": "407d41474451b5b99240fef11078515fa59e97a7b8f61736d7da9cda35f1a575",
+    "README.md": "bb7a72056571636ecdad919abe8ecf5462b7e171ec4f5e738d3d8d5bebdd7f9d",
+    "UPSTREAM.md": "d085d70f8fcbe81fb7f05883c1c682d2108ac15ce7a709a3429949f80adb83c6",
+    "__init__.py": "64f30cb575e346556ab5e624f81f8a3e8a5e089a7322c7bc45c1a1e8d6d1b069",
+    "blender_manifest.toml": "dde2c77ea1dcd0aeb9b92f316fb3f2b8298ee5faa585fdc91486ed4d3f27f11e",
+    "bridge_server.py": "b8036d40d7afc72219275912b997f21122d49cafa4f551e7e4828a0b744f903a",
+    "constraints.py": "651b9352518df055228741c9953530085b5204bc424e77776420d0a6c410d8fd",
+    "humanoid.py": "47fbfbf7209956a6999f7ac2052d6bf511f77fd19b86d64e55bcb90dcd2c1816",
+    "i18n.py": "28f9237252f0c63e001e90d34bc46887c049e2088e1d01df55848845d1479d66",
+    "model_download.py": "feec6d5bac713a31798660e9eed9a66486be91053fd55f1efe1eba9085d8ad34",
+    "motion_retarget.py": "65ba30862c4b712f2c82dda80954bfdea6586bb7b3cd39a018f0e1efcc13bec8",
+    "operators.py": "4d63e30df59db31a14157edeb184fbb31adc9d25fcdc9d3b80f32ce0c8fb29b1",
+    "panels.py": "0398e19a4b1aaa79e2b23c91af0413e4920aea9029694ed85bc9e04de34d88e9",
+    "pmx_adapter.py": "88d78f8fc927d8a07f2f41d5d656165f070e236596cff2cd308a667658d2659e",
+    "properties.py": "3456071a373df7f6346e433859dd53c5814a0059c6748350495b58ac80bade32",
+    "retarget.py": "9bd0e894e8d064d8039f5207345c237de84926a8a8e15a0d010e276ec6881444",
+    "setup_operator.py": "07ddc9bff4cd171687e1950622a17862549459b02db4c7986dc315876b1d0e19",
+    "subprocess_client.py": "843f7de5b64afe6230a808af1cd02066835081de5604778c855d30d2b4769d93",
+    "timeline.py": "445d100144400c2436d57bfaaef0eebcf7157a730260176b5d0e2c1974f718e1",
+    "ui_list.py": "26476eadf9254d08a01af91c5a1622dfb7249680a172e1272571936f327e7888",
+    "workflow.py": "416f0788b45e86c96e0fd84f35cbf2e6cad62c3a350559e4257db17ef845e304"
+  },
+  "verified_core": {
+    "humanoid.py": "47fbfbf7209956a6999f7ac2052d6bf511f77fd19b86d64e55bcb90dcd2c1816",
+    "motion_retarget.py": "65ba30862c4b712f2c82dda80954bfdea6586bb7b3cd39a018f0e1efcc13bec8",
+    "pmx_adapter.py": "88d78f8fc927d8a07f2f41d5d656165f070e236596cff2cd308a667658d2659e"
+  },
+  "checks": [
+    "python_syntax",
+    "versions",
+    "native_extension_build",
+    "native_extension_validate",
+    "exact_payload",
+    "zip_crc",
+    "source_archive_bytes",
+    "three_real_pmx_models"
+  ]
+}

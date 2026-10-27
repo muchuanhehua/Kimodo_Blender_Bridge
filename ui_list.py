@@ -90,7 +90,7 @@ class KIMODO_UL_History(UIList):
         # "…" marks multi-segment entries: all seeds are in the detail view
         seed_txt = str(item.seed) + ("…" if "," in item.seeds else "")
         stats.label(text=seed_txt)
-        stats.label(text=f"{item.duration:.1f}s")
+        stats.label(text=f"{item.duration:.1f} 秒")
         stats.label(text="", icon='CHECKMARK' if os.path.isfile(item.bvh_path) else 'ERROR')
 
 
